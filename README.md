@@ -1,5 +1,5 @@
 # VinylFlow
-DJing application that uses Rust and SDL2.
+DJing application that uses Rust and a custom GUI toolkit based upon SDL2.
 
 ## Development Requirements
 * Rust and Cargo
