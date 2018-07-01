@@ -1,0 +1,8 @@
+[package]
+name = "vinylflow"
+version = "0.1.0"
+authors = ["fwcd"]
+build = "build.rs"
+
+[dependencies.sdl2]
+version = "0.31"
