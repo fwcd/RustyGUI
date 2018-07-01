@@ -1,9 +1,9 @@
 pub struct KeyEvent {
-	keyChar: char
+	key_char: char
 }
 
 impl KeyEvent {
-	pub fn of_char(keyChar: char) -> KeyEvent {
-		return KeyEvent { keyChar: keyChar }
+	pub fn of_char(key_char: char) -> KeyEvent {
+		return KeyEvent { key_char: key_char }
 	}
 }

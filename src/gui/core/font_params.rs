@@ -1,0 +1,32 @@
+pub struct FontParams {
+	pub font_size: f32,
+	pub is_bold: bool,
+	pub is_italic: bool,
+	pub is_underlined: bool
+}
+
+impl FontParams {
+	pub fn of_size(font_size: f32) -> FontParams {
+		return FontParams {
+			font_size: font_size,
+			is_bold: false,
+			is_italic: false,
+			is_underlined: false
+		}
+	}
+	
+	pub fn bold(mut self, is_bold: bool) -> FontParams {
+		self.is_bold = is_bold;
+		return self;
+	}
+	
+	pub fn italic(mut self, is_italic: bool) -> FontParams {
+		self.is_italic = is_italic;
+		return self;
+	}
+	
+	pub fn underlined(mut self, is_underlined: bool) -> FontParams {
+		self.is_underlined = is_underlined;
+		return self;
+	}
+}
