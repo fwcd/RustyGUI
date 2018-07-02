@@ -1,9 +1,11 @@
 use utils::vec2i::Vec2i;
 
+#[derive(Copy, Clone)]
 pub enum MouseButton {
 	Left,
-	Center,
-	Right
+	Middle,
+	Right,
+	Other
 }
 
 pub struct MousePosEvent {

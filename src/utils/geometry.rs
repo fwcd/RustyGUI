@@ -7,6 +7,10 @@ pub struct Rectangle {
 }
 
 impl Rectangle {
+	pub fn new(x: i32, y: i32, width: u32, height: u32) -> Rectangle {
+		return Rectangle { top_left: Vec2i::of(x, y), width: width, height: height };
+	}
+	
 	pub fn at(top_left: Vec2i, width: u32, height: u32) -> Rectangle {
 		return Rectangle { top_left: top_left, width: width, height: height };
 	}
