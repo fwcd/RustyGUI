@@ -1,14 +1,18 @@
 pub struct ShapeDrawParams {
-	pub fill: bool,
-	pub outline: bool
+	filled: bool,
+	outlined: bool
 }
 
 impl ShapeDrawParams {
 	pub fn fill() -> ShapeDrawParams {
-		return ShapeDrawParams { fill: true, outline: false }
+		return ShapeDrawParams { filled: true, outlined: false }
 	}
 	
 	pub fn outline() -> ShapeDrawParams {
-		return ShapeDrawParams { fill: false, outline: true }
+		return ShapeDrawParams { filled: false, outlined: true }
 	}
+	
+	pub fn filled(&self) -> bool { self.filled }
+	
+	pub fn outlined(&self) -> bool { self.outlined }
 }

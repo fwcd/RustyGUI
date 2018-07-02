@@ -15,17 +15,13 @@ impl Color {
 		return Color { red: r, green: g, blue: b, alpha: 255 };
 	}
 	
-	pub fn red() -> Color { Color::rgb(255, 0, 0) }
-	
-	pub fn yellow() -> Color { Color::rgb(255, 255, 0) }
-	
-	pub fn green() -> Color { Color::rgb(0, 255, 0) }
-	
-	pub fn blue() -> Color { Color::rgb(0, 0, 255) }
-	
-	pub fn black() -> Color { Color::rgb(0, 0, 0) }
-	
-	pub fn white() -> Color { Color::rgb(255, 255, 255) }
-	
-	pub fn gray() -> Color { Color::rgb(128, 128, 128) }
+	pub fn red() -> Color        { Color::rgb(255, 0,   0)   }
+	pub fn yellow() -> Color     { Color::rgb(255, 255, 0)   }
+	pub fn green() -> Color      { Color::rgb(0,   255, 0)   }
+	pub fn blue() -> Color       { Color::rgb(0,   0,   255) }
+	pub fn black() -> Color      { Color::rgb(0,   0,   0)   }
+	pub fn dark_gray() -> Color  { Color::rgb(64,  64,  64)  }
+	pub fn gray() -> Color       { Color::rgb(128, 128, 128) }
+	pub fn light_gray() -> Color { Color::rgb(192, 192, 192) }
+	pub fn white() -> Color      { Color::rgb(255, 255, 255) }
 }

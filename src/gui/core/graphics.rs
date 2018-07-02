@@ -30,10 +30,10 @@ impl Graphics {
 	
 	pub fn draw_rect(&mut self, rectangle: APIRect, params: ShapeDrawParams) {
 		let sdl2_rect = sdl2_rect_of(rectangle);
-		if params.fill {
+		if params.filled() {
 			let _ = self.canvas.fill_rect(sdl2_rect);
 		}
-		if params.outline {
+		if params.outlined() {
 			let _ = self.canvas.draw_rect(sdl2_rect);
 		}
 	}

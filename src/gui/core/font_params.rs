@@ -1,8 +1,8 @@
 pub struct FontParams {
-	pub font_size: f32,
-	pub is_bold: bool,
-	pub is_italic: bool,
-	pub is_underlined: bool
+	font_size: f32,
+	is_bold: bool,
+	is_italic: bool,
+	is_underlined: bool
 }
 
 impl FontParams {
@@ -29,4 +29,10 @@ impl FontParams {
 		self.is_underlined = is_underlined;
 		return self;
 	}
+	
+	pub fn is_bold(&self) -> bool { self.is_bold }
+	
+	pub fn is_italic(&self) -> bool { self.is_italic }
+	
+	pub fn is_underlined(&self) -> bool { self.is_underlined }
 }
