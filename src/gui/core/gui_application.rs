@@ -1,10 +1,14 @@
 use super::graphics::Graphics;
 use super::mouse::{MouseClickEvent, MouseDragEvent, MouseMoveEvent};
 use super::keyboard::KeyEvent;
+use utils::listener::Listener;
+use utils::geometry::Rectangle;
 
 /// An application that uses a mouse/keyboard-based
 /// graphical user interface.
 trait GUIApplication {
+	fn add_change_listener(&self, change_listener: Box<Listener<Rectangle>>) {}
+	
 	fn render(&self, graphics: &mut Graphics) {}
 	
 	fn on_mouse_down(&mut self, event: MouseClickEvent) {}
