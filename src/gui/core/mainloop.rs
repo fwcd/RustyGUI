@@ -64,6 +64,7 @@ pub fn run_gui_app(app: &mut GUIApplication) {
 			}
 		}
 		app.render(&mut graphics);
+		graphics.show();
 		thread::sleep(sleep_per_iteration);
 	}
 }

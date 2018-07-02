@@ -20,12 +20,22 @@ impl Graphics {
 		};
 	}
 	
+	pub fn clear(&mut self) {
+		self.canvas.clear();
+	}
+	
 	pub fn set_color(&mut self, color: APIColor) {
 		self.canvas.set_draw_color(sdl2_color_of(color));
 	}
 	
 	pub fn draw_rect(&mut self, rectangle: APIRect, params: ShapeDrawParams) {
-		self.canvas.draw_rect(sdl2_rect_of(rectangle));
+		let sdl2_rect = sdl2_rect_of(rectangle);
+		if params.fill {
+			let _ = self.canvas.fill_rect(sdl2_rect);
+		}
+		if params.outline {
+			let _ = self.canvas.draw_rect(sdl2_rect);
+		}
 	}
 	
 	pub fn draw_oval_in(&mut self, rectangle: APIRect, params: ShapeDrawParams) {
@@ -34,5 +44,9 @@ impl Graphics {
 	
 	pub fn draw_text(&mut self, text: &str, pos: Vec2i, params: FontParams) {
 		// TODO: Draw using SDL2
+	}
+	
+	pub fn show(&mut self) {
+		self.canvas.present();
 	}
 }

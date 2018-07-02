@@ -14,4 +14,18 @@ impl Color {
 	pub fn rgb(r: u8, g: u8, b: u8) -> Color {
 		return Color { red: r, green: g, blue: b, alpha: 255 };
 	}
+	
+	pub fn red() -> Color { Color::rgb(255, 0, 0) }
+	
+	pub fn yellow() -> Color { Color::rgb(255, 255, 0) }
+	
+	pub fn green() -> Color { Color::rgb(0, 255, 0) }
+	
+	pub fn blue() -> Color { Color::rgb(0, 0, 255) }
+	
+	pub fn black() -> Color { Color::rgb(0, 0, 0) }
+	
+	pub fn white() -> Color { Color::rgb(255, 255, 255) }
+	
+	pub fn gray() -> Color { Color::rgb(128, 128, 128) }
 }
