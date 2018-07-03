@@ -1,7 +1,9 @@
 use sdl2::video::Window;
 use sdl2::render::Canvas;
+use sdl2::ttf::Sdl2TtfContext;
+use utils::size::Size;
 use utils::vec2i::Vec2i;
-use utils::geometry::Rectangle as APIRect;
+use utils::rect::Rectangle as APIRect;
 use super::color::Color as APIColor;
 use super::draw_params::ShapeDrawParams;
 use super::font_params::FontParams;
@@ -10,13 +12,15 @@ use super::api_bridge::{sdl2_color_of, sdl2_rect_of};
 /// A class wrapping the SDL2 graphics context to decouple
 /// the application from the API.
 pub struct Graphics {
-	canvas: Canvas<Window>
+	canvas: Canvas<Window>,
+	ttf_context: Sdl2TtfContext
 }
 
 impl Graphics {
-	pub fn from(canvas: Canvas<Window>) -> Graphics {
+	pub fn from(canvas: Canvas<Window>, ttf_context: Sdl2TtfContext) -> Graphics {
 		return Graphics {
-			canvas: canvas
+			canvas: canvas,
+			ttf_context: ttf_context
 		};
 	}
 	
@@ -38,12 +42,16 @@ impl Graphics {
 		}
 	}
 	
-	pub fn draw_oval_in(&mut self, rectangle: APIRect, params: ShapeDrawParams) {
-		// TODO: Draw using SDL2
+	pub fn string_size(&self, text: &str, params: FontParams) -> Size {
+		unimplemented!() // TODO
 	}
 	
-	pub fn draw_text(&mut self, text: &str, pos: Vec2i, params: FontParams) {
-		// TODO: Draw using SDL2
+	pub fn draw_oval_in(&mut self, rectangle: APIRect, params: ShapeDrawParams) {
+		unimplemented!() // TODO
+	}
+	
+	pub fn draw_string(&mut self, text: &str, pos: Vec2i, params: FontParams) {
+		unimplemented!() // TODO
 	}
 	
 	pub fn show(&mut self) {

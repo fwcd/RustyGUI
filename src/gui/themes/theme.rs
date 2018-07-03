@@ -40,11 +40,11 @@ impl Theme {
 		return self;
 	}
 	
-	pub fn fg_color1(&self) -> &Color { self.fg_color1 }
+	pub fn fg_color1(&self) -> Color { self.fg_color1 }
 	
-	pub fn fg_color2(&self) -> &Color { self.fg_color2 }
+	pub fn fg_color2(&self) -> Color { self.fg_color2 }
 	
-	pub fn bg_color1(&self) -> &Color { self.bg_color1 }
+	pub fn bg_color1(&self) -> Color { self.bg_color1 }
 	
-	pub fn bg_color2(&self) -> &Color { self.bg_color2 }
+	pub fn bg_color2(&self) -> Color { self.bg_color2 }
 }

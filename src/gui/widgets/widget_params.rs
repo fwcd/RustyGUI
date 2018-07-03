@@ -1,32 +1,21 @@
 use utils::vec2i::Vec2i;
-use utils::geometry::Rectangle;
+use gui::themes::theme::Theme;
 use gui::core::graphics::Graphics;
 
-pub struct WidgetDrawParams {
-	top_left: Vec2i,
-	theme: &Theme
+pub struct WidgetDrawParams<'a> {
+	graphics: &'a mut Graphics,
+	theme: &'a Theme
 }
 
-pub struct RenderedArea {
-	bounds: Rectangle
-}
-
-impl WidgetDrawParams {
-	pub fn at(top_left: Vec2i) -> WidgetDrawParams {
-		WidgetDrawParams { top_left: top_left }
+impl <'a> WidgetDrawParams<'a> {
+	pub fn new(graphics: &'a mut Graphics, theme: &'a Theme) -> WidgetDrawParams<'a> {
+		WidgetDrawParams {
+			graphics: graphics,
+			theme: theme
+		}
 	}
 	
-	pub fn top_left(&self) -> &Vec2i { &self.top_left }
-}
-
-impl RenderedArea {
-	pub fn of(bounds: Rectangle) -> RenderedArea {
-		RenderedArea { bounds: bounds }
-	}
+	pub fn theme(&self) -> &Theme { self.theme }
 	
-	pub fn at(top_left: Vec2i, width: u32, height: u32) -> RenderedArea {
-		RenderedArea { bounds: Rectangle::at(top_left, width, height) }
-	}
-	
-	pub fn bounds(&self) -> &Rectangle { &self.bounds }
+	pub fn graphics(&mut self) -> &mut Graphics { self.graphics }
 }

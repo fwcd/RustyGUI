@@ -4,7 +4,7 @@ use sdl2::rect::Rect as SDL2Rect;
 
 use super::color::Color as APIColor;
 use super::mouse::MouseButton as APIMouseButton;
-use utils::geometry::Rectangle as APIRect;
+use utils::rect::Rectangle as APIRect;
 
 // Conversion methods
 
@@ -17,7 +17,7 @@ pub fn api_color_of(color: SDL2Color) -> APIColor {
 }
 
 pub fn sdl2_rect_of(rect: APIRect) -> SDL2Rect {
-	return SDL2Rect::new(rect.top_left.x, rect.top_left.y, rect.width, rect.height);
+	return SDL2Rect::new(rect.top_left().x, rect.top_left().y, rect.width(), rect.height());
 }
 
 pub fn api_rect_of(rect: SDL2Rect) -> APIRect {
