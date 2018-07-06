@@ -19,5 +19,5 @@ impl Widget for EmptyWidget {
 	
 	fn bounds(&self) -> &WidgetBounds { &self.bounds }
 	
-	fn set_bounds(&mut self, bounds: WidgetBounds) { self.bounds = bounds }
+	fn internal_set_bounds(&mut self, bounds: WidgetBounds) { self.bounds = bounds }
 }
