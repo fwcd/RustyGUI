@@ -1,8 +1,8 @@
-use super::widget_params::WidgetDrawParams;
 use super::widget_bounds::WidgetBounds;
 use utils::size::Size;
 use utils::vec2i::Vec2i;
 use gui::core::graphics::Graphics;
+use gui::themes::theme::Theme;
 
 /// A GUI widget
 pub trait Widget {
@@ -14,7 +14,7 @@ pub trait Widget {
 	
 	fn get_preferred_size(&self, graphics: &Graphics) -> Size;
 	
-	fn render(&self, params: &mut WidgetDrawParams);
+	fn render(&self, graphics: &mut Graphics, theme: &Theme);
 	
 	fn top_left(&self) -> Vec2i {
 		self.bounds().rect().top_left()

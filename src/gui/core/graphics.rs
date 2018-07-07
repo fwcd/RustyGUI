@@ -47,11 +47,11 @@ impl Graphics {
 	}
 	
 	pub fn draw_oval_in(&mut self, rectangle: APIRect, params: ShapeDrawParams) {
-		unimplemented!() // TODO
+		// TODO
 	}
 	
 	pub fn draw_string(&mut self, text: &str, pos: Vec2i, params: FontParams) {
-		unimplemented!() // TODO
+		// TODO
 	}
 	
 	pub fn show(&mut self) {

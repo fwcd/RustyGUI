@@ -1,10 +1,10 @@
 use super::widget::Widget;
-use super::widget_params::WidgetDrawParams;
 use super::widget_bounds::WidgetBounds;
 use utils::size::Size;
 use utils::vec2i::Vec2i;
 use gui::core::graphics::Graphics;
 use gui::core::font_params::FontParams;
+use gui::themes::theme::Theme;
 
 pub struct Label {
 	bounds: WidgetBounds,
@@ -29,8 +29,7 @@ impl Label {
 }
 
 impl Widget for Label {
-	fn render(&self, params: &mut WidgetDrawParams) {
-		let graphics = params.graphics();
+	fn render(&self, graphics: &mut Graphics, theme: &Theme) {
 		graphics.draw_string(self.text.as_str(), self.top_left() + self.padding, self.font_params);
 	}
 	

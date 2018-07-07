@@ -1,10 +1,10 @@
 use super::widget::Widget;
 use super::label::Label;
-use super::widget_params::WidgetDrawParams;
 use super::widget_bounds::WidgetBounds;
 use utils::size::Size;
 use utils::vec2i::Vec2i;
 use gui::core::graphics::Graphics;
+use gui::themes::theme::Theme;
 
 pub struct Button {
 	bounds: WidgetBounds,
@@ -31,8 +31,9 @@ impl Button {
 }
 
 impl Widget for Button {
-	fn render(&self, params: &mut WidgetDrawParams) {
-		self.label.render(params);
+	fn render(&self, graphics: &mut Graphics, theme: &Theme) {
+		graphics.set_color(theme.bg_color2());
+		self.label.render(graphics, theme);
 	}
 	
 	fn get_preferred_size(&self, graphics: &Graphics) -> Size {

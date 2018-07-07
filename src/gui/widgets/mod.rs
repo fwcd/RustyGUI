@@ -1,5 +1,4 @@
 pub mod widget;
-pub mod widget_params;
 pub mod layouts;
 pub mod widget_gui_app;
 pub mod widget_bounds;

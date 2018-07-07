@@ -3,6 +3,7 @@ use gui::core::gui_application::GUIApplication;
 use gui::themes::theme::Theme;
 use gui::core::mouse::{MouseClickEvent, MouseDragEvent, MouseMoveEvent};
 use gui::core::keyboard::KeyEvent;
+use super::widget::Widget;
 use super::layouts::layout::Layout;
 use super::container::Container;
 
@@ -31,7 +32,11 @@ impl WidgetGUIApp {
 }
 
 impl GUIApplication for WidgetGUIApp {
-	fn render(&self, graphics: &mut Graphics) {}
+	fn root(&mut self) -> &mut Container { &mut self.root }
+	
+	fn render(&self, graphics: &mut Graphics) {
+		self.root.render(graphics, &self.theme);
+	}
 	
 	fn on_mouse_down(&mut self, event: MouseClickEvent) {}
 	

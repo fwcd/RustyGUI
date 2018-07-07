@@ -1,5 +1,7 @@
 use gui::widgets::widget::Widget;
 use super::layout::Layout;
+use std::rc::Rc;
+use std::cell::RefCell;
 
 pub struct BoxLayout {
 	is_horizontal: bool
@@ -16,11 +18,11 @@ impl BoxLayout {
 }
 
 impl Layout for BoxLayout {
-	fn on_add_component(&self, widget: &Widget, layout_hint: String, all: &Vec<Box<Widget>>) {
+	fn on_add_component(&self, widget: Rc<RefCell<Widget>>, layout_hint: &String) {
 		// TODO
 	}
 	
-	fn on_remove_component(&self, widget: &Widget, layout_hint: String, all: &Vec<Box<Widget>>) {
+	fn on_remove_component(&self, widget: Rc<RefCell<Widget>>, layout_hint: &String) {
 		// TODO
 	}
 }

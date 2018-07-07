@@ -1,15 +1,17 @@
 use super::widget::Widget;
-use super::widget_params::WidgetDrawParams;
 use super::widget_bounds::WidgetBounds;
 use super::layouts::layout::Layout;
 use super::layouts::box_layout::BoxLayout;
 use gui::core::graphics::Graphics;
+use gui::themes::theme::Theme;
 use utils::reduce::Reduce;
 use utils::vec2i::Vec2i;
 use utils::size::Size;
+use std::rc::Rc;
+use std::cell::RefCell;
 
 struct LayoutedWidget {
-	pub widget: Box<Widget>,
+	pub widget: Rc<RefCell<Widget>>,
 	pub layout_hint: String,
 	pub id: i32
 }
@@ -37,27 +39,31 @@ impl Container {
 	
 	pub fn vbox() -> Container { Container::new(Box::new(BoxLayout::vertical())) }
 	
-	pub fn add(&mut self, child: Box<Widget>) {
+	pub fn add(&mut self, child: Rc<RefCell<Widget>>) {
 		self.insert(child, "");
 	}
 	
-	pub fn insert(&mut self, child: Box<Widget>, layout_hint: &str) {
+	pub fn insert(&mut self, child: Rc<RefCell<Widget>>, layout_hint: &str) {
 		let current_id = self.current_id;
 		self.insert_with_id(child, layout_hint, current_id);
 		self.current_id += 1;
 	}
 	
-	pub fn insert_with_id(&mut self, child: Box<Widget>, layout_hint: &str, id: i32) {
+	pub fn insert_with_id(&mut self, child: Rc<RefCell<Widget>>, layout_hint: &str, id: i32) {
+		let boxed_layout_hint = layout_hint.to_string();
+		
+		self.layout.on_add_component(child.clone(), &boxed_layout_hint);
 		self.childs.push(LayoutedWidget {
 			widget: child,
-			layout_hint: layout_hint.to_string(),
+			layout_hint: boxed_layout_hint,
 			id: id
 		});
 	}
 	
 	pub fn remove_with_id(&mut self, id: i32) {
 		let index = self.index_of_id(id).expect("Could not find index of the child widget");
-		self.childs.remove(index);
+		let removed = self.childs.remove(index);
+		self.layout.on_remove_component(removed.widget, &removed.layout_hint);
 	}
 	
 	fn index_of_id(&self, id: i32) -> Option<usize> {
@@ -73,15 +79,15 @@ impl Container {
 }
 
 impl Widget for Container {
-	fn render(&self, params: &mut WidgetDrawParams) {
+	fn render(&self, graphics: &mut Graphics, theme: &Theme) {
 		for child in &self.childs {
-			child.widget.render(params);
+			child.widget.borrow_mut().render(graphics, theme);
 		}
 	}
 	
 	fn get_preferred_size(&self, graphics: &Graphics) -> Size {
 		self.childs.iter()
-			.map(|child| child.widget.bounds().rect())
+			.map(|child| child.widget.borrow().bounds().rect())
 			.reduce(|a, b| a.merge(b))
 			.map(|rect| rect.size())
 			.unwrap_or(Size::of(0, 0))
@@ -90,7 +96,7 @@ impl Widget for Container {
 	
 	fn internal_on_move_by(&mut self, delta: Vec2i) {
 		for child in &mut self.childs {
-			child.widget.move_by(delta);
+			child.widget.borrow_mut().move_by(delta);
 		}
 	}
 	

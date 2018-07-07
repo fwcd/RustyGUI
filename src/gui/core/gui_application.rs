@@ -1,6 +1,7 @@
 use super::graphics::Graphics;
 use super::mouse::{MouseClickEvent, MouseDragEvent, MouseMoveEvent};
 use super::keyboard::KeyEvent;
+use gui::widgets::container::Container;
 
 /// An application that uses a mouse/keyboard-based
 /// graphical user interface.
@@ -10,6 +11,8 @@ pub trait GUIApplication {
 	fn width(&self) -> u32;
 	
 	fn height(&self) -> u32;
+	
+	fn root(&mut self) -> &mut Container;
 	
 	fn render(&self, graphics: &mut Graphics) {}
 	
