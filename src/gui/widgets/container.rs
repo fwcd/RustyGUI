@@ -3,6 +3,7 @@ use super::widget_bounds::WidgetBounds;
 use super::layouts::layout::Layout;
 use super::layouts::box_layout::BoxLayout;
 use gui::core::graphics::Graphics;
+use gui::core::draw_params::ShapeDrawParams;
 use gui::themes::theme::Theme;
 use utils::reduce::Reduce;
 use utils::vec2i::Vec2i;
@@ -24,7 +25,8 @@ pub struct Container {
 	layout: Box<Layout>,
 	added_widgets: VecDeque<LayoutedWidgetRef>,
 	removed_widgets: VecDeque<LayoutedWidgetRef>,
-	current_id: i32
+	current_id: i32,
+	has_background: bool
 }
 
 impl Container {
@@ -36,7 +38,8 @@ impl Container {
 			layout: layout,
 			added_widgets: VecDeque::new(),
 			removed_widgets: VecDeque::new(),
-			current_id: 0
+			current_id: 0,
+			has_background: true
 		}
 	}
 	
@@ -82,20 +85,20 @@ impl Container {
 		}
 		return None;
 	}
+	
+	pub fn has_background(&self) -> bool { self.has_background }
+	
+	pub fn set_has_background(&mut self, has_background: bool) { self.has_background = has_background }
 }
 
 impl Widget for Container {
 	fn render(&mut self, graphics: &mut Graphics, theme: &Theme) {
-		// Layout added widgets
-		while !self.added_widgets.is_empty() {
-			let added = self.added_widgets.pop_front().unwrap();
-			self.layout.on_add_widget(added.widget, &added.layout_hint, graphics)
-		}
+		self.update_layout(graphics);
 		
-		// Layout based on removed widgets
-		while !self.removed_widgets.is_empty() {
-			let removed = self.removed_widgets.pop_front().unwrap();
-			self.layout.on_remove_widget(removed.widget, &removed.layout_hint, graphics)
+		// Possibly draw background
+		if self.has_background {
+			graphics.set_color(theme.bg_color_soft());
+			graphics.draw_rect(self.bounds.rect(), ShapeDrawParams::fill());
 		}
 		
 		// Draw child widgets
@@ -123,5 +126,21 @@ impl Widget for Container {
 		}
 		
 		self.bounds = bounds;
+	}
+	
+	fn update_layout(&mut self, graphics: &Graphics) {
+		// Layout added widgets
+		while !self.added_widgets.is_empty() {
+			let added = self.added_widgets.pop_front().unwrap();
+			added.widget.borrow_mut().update_layout(graphics);
+			self.layout.on_add_widget(added.widget, &added.layout_hint, graphics);
+		}
+		
+		// Layout based on removed widgets
+		while !self.removed_widgets.is_empty() {
+			let removed = self.removed_widgets.pop_front().unwrap();
+			removed.widget.borrow_mut().update_layout(graphics);
+			self.layout.on_remove_widget(removed.widget, &removed.layout_hint, graphics);
+		}
 	}
 }

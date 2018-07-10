@@ -36,4 +36,6 @@ pub trait Widget {
 		let delta = new_top_left - self.top_left();
 		self.move_by(delta);
 	}
+	
+	fn update_layout(&mut self, graphics: &Graphics) {}
 }

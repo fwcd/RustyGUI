@@ -30,7 +30,7 @@ impl Label {
 
 impl Widget for Label {
 	fn render(&mut self, graphics: &mut Graphics, theme: &Theme) {
-		graphics.set_color(theme.fg_color1());
+		graphics.set_color(theme.fg_color_strong());
 		graphics.draw_string(self.text.as_str(), self.top_left(), self.font_params);
 	}
 	

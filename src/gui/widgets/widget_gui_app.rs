@@ -20,6 +20,7 @@ impl WidgetGUIApp {
 	pub fn new(title: &str, width: u32, height: u32, base_layout: Box<Layout>) -> WidgetGUIApp {
 		let mut root = Container::new(base_layout);
 		root.set_bounds(WidgetBounds::new(0, 0, width, height));
+		root.set_has_background(false);
 		WidgetGUIApp {
 			title: title.to_string(),
 			width: width,
@@ -38,7 +39,7 @@ impl GUIApplication for WidgetGUIApp {
 	fn root(&mut self) -> &mut Container { &mut self.root }
 	
 	fn render(&mut self, graphics: &mut Graphics) {
-		graphics.set_color(self.theme.bg_color1());
+		graphics.set_color(self.theme.bg_color_strong());
 		graphics.clear();
 		self.root.render(graphics, &self.theme);
 	}
