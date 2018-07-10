@@ -7,13 +7,15 @@ pub struct Color {
 }
 
 impl Color {
-	pub fn rgba(r: u8, g: u8, b: u8, a: u8) -> Color {
-		return Color { red: r, green: g, blue: b, alpha: a };
+	pub fn rgba(r: u8, g: u8, b: u8, a: u8) -> Self {
+		Color { red: r, green: g, blue: b, alpha: a }
 	}
 	
-	pub fn rgb(r: u8, g: u8, b: u8) -> Color {
-		return Color { red: r, green: g, blue: b, alpha: 255 };
+	pub fn rgb(r: u8, g: u8, b: u8) -> Self {
+		Color { red: r, green: g, blue: b, alpha: 255 }
 	}
+	
+	pub fn with_alpha(&self, new_alpha: u8) -> Color { Color::rgba(self.red, self.green, self.blue, new_alpha) }
 	
 	pub fn red() -> Color        { Color::rgb(255, 0,   0)   }
 	

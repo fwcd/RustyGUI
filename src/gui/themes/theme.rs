@@ -15,7 +15,7 @@ impl Theme {
 			fg_color_strong: Color::black(),
 			fg_color_soft: Color::dark_gray(),
 			bg_color_strong: Color::white(),
-			bg_color_soft: Color::light_gray()
+			bg_color_soft: Color::black().with_alpha(50)
 		}
 	}
 	
@@ -31,13 +31,13 @@ impl Theme {
 	pub fn fg_colors(mut self, fg_color_strong: Color, fg_color_soft: Color) -> Theme {
 		self.fg_color_strong = fg_color_strong;
 		self.fg_color_soft = fg_color_soft;
-		return self;
+		self
 	}
 	
 	pub fn bg_colors(mut self, bg_color_strong: Color, bg_color_soft: Color) -> Theme {
 		self.bg_color_strong = bg_color_strong;
 		self.bg_color_soft = bg_color_soft;
-		return self;
+		self
 	}
 	
 	pub fn fg_color_strong(&self) -> Color { self.fg_color_strong }

@@ -1,5 +1,5 @@
 use sdl2::video::{Window, WindowContext};
-use sdl2::render::{Canvas, TextureCreator, Texture, TextureQuery};
+use sdl2::render::{Canvas, TextureCreator, Texture, TextureQuery, BlendMode};
 use sdl2::ttf;
 use sdl2::ttf::{Font, Sdl2TtfContext};
 use sdl2::rect::Rect as SDL2Rect;
@@ -23,8 +23,10 @@ pub struct Graphics<'g> {
 
 impl <'g> Graphics<'g> {
 	pub fn from(canvas: Canvas<Window>, ttf: Sdl2TtfContext, font_path: &'g Path) -> Graphics<'g> {
+		let mut canvas_mut = canvas;
+		canvas_mut.set_blend_mode(BlendMode::Blend);
 		Graphics {
-			canvas: canvas,
+			canvas: canvas_mut,
 			ttf: ttf,
 			font_path: font_path
 		}
