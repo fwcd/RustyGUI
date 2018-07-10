@@ -24,12 +24,12 @@ fn main() {
 	let mut app = WidgetGUIApp::new(title, width, height, Box::new(layout));
 	{
 		let root = app.root();
-		root.add(Rc::new(RefCell::new(Button::labelled("Test", 14.0))));
-		root.add(Rc::new(RefCell::new(Label::of("Demo", 15.0))));
+		root.add(Rc::new(RefCell::new(Button::labelled("Test", 14))));
+		root.add(Rc::new(RefCell::new(Label::of("Demo", 15))));
 		let mut container = Container::vbox();
-		container.add(Rc::new(RefCell::new(Button::labelled("One", 12.0))));
-		container.add(Rc::new(RefCell::new(Button::labelled("Two", 12.0))));
-		container.add(Rc::new(RefCell::new(Button::labelled("Three", 12.0))));
+		container.add(Rc::new(RefCell::new(Button::labelled("One", 12))));
+		container.add(Rc::new(RefCell::new(Button::labelled("Two", 12))));
+		container.add(Rc::new(RefCell::new(Button::labelled("Three", 12))));
 		root.add(Rc::new(RefCell::new(container)));
 	}
 	run_gui_app(&mut app);

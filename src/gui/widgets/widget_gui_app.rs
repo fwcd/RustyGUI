@@ -4,6 +4,7 @@ use gui::themes::theme::Theme;
 use gui::core::mouse::{MouseClickEvent, MouseDragEvent, MouseMoveEvent};
 use gui::core::keyboard::KeyEvent;
 use super::widget::Widget;
+use super::widget_bounds::WidgetBounds;
 use super::layouts::layout::Layout;
 use super::container::Container;
 
@@ -17,12 +18,14 @@ pub struct WidgetGUIApp {
 
 impl WidgetGUIApp {
 	pub fn new(title: &str, width: u32, height: u32, base_layout: Box<Layout>) -> WidgetGUIApp {
+		let mut root = Container::new(base_layout);
+		root.set_bounds(WidgetBounds::new(0, 0, width, height));
 		WidgetGUIApp {
 			title: title.to_string(),
 			width: width,
 			height: height,
 			theme: Theme::light(),
-			root: Container::new(base_layout)
+			root: root
 		}
 	}
 	
@@ -35,6 +38,8 @@ impl GUIApplication for WidgetGUIApp {
 	fn root(&mut self) -> &mut Container { &mut self.root }
 	
 	fn render(&self, graphics: &mut Graphics) {
+		graphics.set_color(self.theme.bg_color1());
+		graphics.clear();
 		self.root.render(graphics, &self.theme);
 	}
 	

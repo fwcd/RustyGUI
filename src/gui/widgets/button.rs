@@ -25,7 +25,7 @@ impl Button {
 		}
 	}
 	
-	pub fn labelled(text: &str, font_size: f32) -> Button {
+	pub fn labelled(text: &str, font_size: u16) -> Button {
 		Button::new(Label::of(text, font_size))
 	}
 }
@@ -46,5 +46,5 @@ impl Widget for Button {
 	
 	fn bounds(&self) -> &WidgetBounds { &self.bounds }
 	
-	fn internal_set_bounds(&mut self, bounds: WidgetBounds) { self.bounds = bounds }
+	fn set_bounds(&mut self, bounds: WidgetBounds) { self.bounds = bounds }
 }

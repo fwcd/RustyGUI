@@ -23,7 +23,7 @@ impl Label {
 		}
 	}
 	
-	pub fn of(text: &str, font_size: f32) -> Label {
+	pub fn of(text: &str, font_size: u16) -> Label {
 		Label::new(text, FontParams::of_size(font_size))
 	}
 }
@@ -39,5 +39,5 @@ impl Widget for Label {
 	
 	fn bounds(&self) -> &WidgetBounds { &self.bounds }
 	
-	fn internal_set_bounds(&mut self, bounds: WidgetBounds) { self.bounds = bounds }
+	fn set_bounds(&mut self, bounds: WidgetBounds) { self.bounds = bounds }
 }

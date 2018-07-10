@@ -1,13 +1,13 @@
 #[derive(Copy, Clone)]
 pub struct FontParams {
-	font_size: f32,
+	font_size: u16,
 	is_bold: bool,
 	is_italic: bool,
 	is_underlined: bool
 }
 
 impl FontParams {
-	pub fn of_size(font_size: f32) -> FontParams {
+	pub fn of_size(font_size: u16) -> FontParams {
 		return FontParams {
 			font_size: font_size,
 			is_bold: false,
@@ -36,4 +36,6 @@ impl FontParams {
 	pub fn is_italic(&self) -> bool { self.is_italic }
 	
 	pub fn is_underlined(&self) -> bool { self.is_underlined }
+	
+	pub fn font_size(&self) -> u16 { self.font_size }
 }

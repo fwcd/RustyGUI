@@ -52,7 +52,7 @@ impl Rectangle {
 	
 	pub fn size(&self) -> Size { self.size }
 	
-	pub fn width(&self) -> u32 { self.size.width() }
+	pub fn width(&self) -> u32 { self.size.width }
 	
-	pub fn height(&self) -> u32 { self.size.height() }
+	pub fn height(&self) -> u32 { self.size.height }
 }

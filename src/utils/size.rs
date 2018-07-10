@@ -3,8 +3,8 @@ use std::ops::Add;
 
 #[derive(Copy, Clone)]
 pub struct Size {
-	width: u32,
-	height: u32
+	pub width: u32,
+	pub height: u32
 }
 
 impl Size {
@@ -15,10 +15,6 @@ impl Size {
 	pub fn of_vec(vector: Vec2i) -> Size {
 		Size { width: vector.x as u32, height: vector.y as u32 }
 	}
-	
-	pub fn width(&self) -> u32 { self.width }
-	
-	pub fn height(&self) -> u32 { self.height }
 	
 	pub fn to_vec(&self) -> Vec2i {
 		Vec2i::of(self.width as i32, self.height as i32)
