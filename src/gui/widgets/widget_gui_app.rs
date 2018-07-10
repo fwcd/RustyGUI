@@ -1,8 +1,9 @@
 use gui::core::graphics::Graphics;
 use gui::core::gui_application::GUIApplication;
-use gui::themes::theme::Theme;
 use gui::core::mouse::{MouseClickEvent, MouseDragEvent, MouseMoveEvent};
 use gui::core::keyboard::KeyEvent;
+use gui::core::input_responder::InputResponder;
+use gui::themes::theme::Theme;
 use super::widget::Widget;
 use super::widget_bounds::WidgetBounds;
 use super::layouts::layout::Layout;
@@ -44,6 +45,14 @@ impl GUIApplication for WidgetGUIApp {
 		self.root.render(graphics, &self.theme);
 	}
 	
+	fn title(&self) -> String { self.title.to_string() }
+	
+	fn width(&self) -> u32 { self.width }
+	
+	fn height(&self) -> u32 { self.height }
+}
+
+impl InputResponder for WidgetGUIApp {
 	fn on_mouse_down(&mut self, event: MouseClickEvent) {}
 	
 	fn on_mouse_up(&mut self, event: MouseClickEvent) {}
@@ -55,10 +64,4 @@ impl GUIApplication for WidgetGUIApp {
 	fn on_key_down(&mut self, event: KeyEvent) {}
 	
 	fn on_key_up(&mut self, event: KeyEvent) {}
-	
-	fn title(&self) -> String { self.title.to_string() }
-	
-	fn width(&self) -> u32 { self.width }
-	
-	fn height(&self) -> u32 { self.height }
 }
