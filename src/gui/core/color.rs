@@ -17,6 +17,8 @@ impl Color {
 	
 	pub fn with_alpha(&self, new_alpha: u8) -> Color { Color::rgba(self.red, self.green, self.blue, new_alpha) }
 	
+	pub fn with_half_alpha(&self) -> Color { self.with_alpha(self.alpha / 2) }
+	
 	pub fn red() -> Color        { Color::rgb(255, 0,   0)   }
 	
 	pub fn yellow() -> Color     { Color::rgb(255, 255, 0)   }
