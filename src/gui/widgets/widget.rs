@@ -15,24 +15,25 @@ pub trait Widget {
 	
 	fn get_preferred_size(&self, graphics: &Graphics) -> Size;
 	
-	fn render(&self, graphics: &mut Graphics, theme: &Theme);
+	fn render(&mut self, graphics: &mut Graphics, theme: &Theme);
 	
 	fn top_left(&self) -> Vec2i {
 		self.bounds().rect().top_left()
 	}
 	
+	/// This method should ONLY be called inside of
+	/// Layout managers OR when no layout is used at all.
+	/// Otherwise conflicts may occur.
 	fn move_by(&mut self, delta: Vec2i) {
 		let new_bounding_rect = self.bounds().rect().moved_by(delta);
 		self.set_bounds(WidgetBounds::of(new_bounding_rect));
-		self.internal_on_move_by(delta);
 	}
 	
+	/// This method should ONLY be called inside of
+	/// Layout managers OR when no layout is used at all.
+	/// Otherwise conflicts may occur.
 	fn move_to(&mut self, new_top_left: Vec2i) {
 		let delta = new_top_left - self.top_left();
 		self.move_by(delta);
 	}
-	
-	/// This is NOT an API method and should ONLY
-	/// be implemented.
-	fn internal_on_move_by(&mut self, delta: Vec2i) {}
 }

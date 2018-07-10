@@ -1,5 +1,4 @@
 use std::ops::{Add, Sub, Mul, Div};
-use std::fmt::Debug;
 use std::cmp::{max, min};
 
 /// A mathematical vector holding two integer components.

@@ -4,6 +4,7 @@ use utils::size::Size;
 use gui::core::graphics::Graphics;
 use gui::themes::theme::Theme;
 
+#[derive(Debug)]
 pub struct EmptyWidget {
 	bounds: WidgetBounds
 }
@@ -13,7 +14,7 @@ impl EmptyWidget {
 }
 
 impl Widget for EmptyWidget {
-	fn render(&self, graphics: &mut Graphics, theme: &Theme) {}
+	fn render(&mut self, graphics: &mut Graphics, theme: &Theme) {}
 	
 	fn get_preferred_size(&self, graphics: &Graphics) -> Size { Size::of(0, 0) }
 	

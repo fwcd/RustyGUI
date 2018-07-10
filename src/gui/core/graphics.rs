@@ -50,7 +50,7 @@ impl <'g> Graphics<'g> {
 	
 	pub fn string_size(&self, text: &str, params: FontParams) -> Size {
 		let texture_creator = self.canvas.texture_creator();
-		let texture = Self::string_to_texture(&self.ttf, self.font_path, &texture_creator, text, params);
+		let texture = Self::string_to_texture(&self.ttf, self.font_path, &texture_creator, text, params, self.canvas.draw_color());
 		Self::texture_size(&texture)
 	}
 	
@@ -60,7 +60,7 @@ impl <'g> Graphics<'g> {
 	
 	pub fn draw_string(&mut self, text: &str, pos: Vec2i, params: FontParams) {
 		let texture_creator = self.canvas.texture_creator();
-		let texture = Self::string_to_texture(&self.ttf, self.font_path, &texture_creator, text, params);
+		let texture = Self::string_to_texture(&self.ttf, self.font_path, &texture_creator, text, params, self.canvas.draw_color());
 		let size = Self::texture_size(&texture);
 		let bounds = SDL2Rect::new(pos.x, pos.y, size.width, size.height);
 		self.canvas.copy(&texture, None, Some(bounds))
@@ -77,12 +77,19 @@ impl <'g> Graphics<'g> {
 		Size::of(width, height)
 	}
 	
-	fn string_to_texture(ttf: &Sdl2TtfContext, font_path: &Path, texture_creator: &'g TextureCreator<WindowContext>, text: &str, params: FontParams) -> Texture<'g> {
+	fn string_to_texture(
+		ttf: &Sdl2TtfContext,
+		font_path: &Path,
+		texture_creator: &'g TextureCreator<WindowContext>,
+		text: &str,
+		params: FontParams,
+		color: SDL2Color
+	) -> Texture<'g> {
 		let mut font = ttf.load_font(font_path, params.font_size())
 				.expect("Error while loading font");
 		Self::update_font_style(&mut font, params);
 		let surface = font.render(text)
-				.blended(SDL2Color::RGBA(255, 0, 0, 255))
+				.blended(color)
 				.expect("Error while rendering text to surface");
 		texture_creator.create_texture_from_surface(&surface)
 				.expect("Error while creating font texture from surface")

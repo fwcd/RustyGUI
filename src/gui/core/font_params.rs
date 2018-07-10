@@ -1,4 +1,4 @@
-#[derive(Copy, Clone)]
+#[derive(Debug, Copy, Clone)]
 pub struct FontParams {
 	font_size: u16,
 	is_bold: bool,

@@ -1,7 +1,7 @@
 use super::vec2i::Vec2i;
 use super::size::Size;
 
-#[derive(Copy, Clone)]
+#[derive(Debug, Copy, Clone)]
 pub struct Rectangle {
 	top_left: Vec2i,
 	size: Size

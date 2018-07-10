@@ -14,7 +14,7 @@ pub trait GUIApplication {
 	
 	fn root(&mut self) -> &mut Container;
 	
-	fn render(&self, graphics: &mut Graphics) {}
+	fn render(&mut self, graphics: &mut Graphics) {}
 	
 	fn on_mouse_down(&mut self, event: MouseClickEvent) {}
 	

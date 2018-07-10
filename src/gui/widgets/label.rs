@@ -29,12 +29,13 @@ impl Label {
 }
 
 impl Widget for Label {
-	fn render(&self, graphics: &mut Graphics, theme: &Theme) {
-		graphics.draw_string(self.text.as_str(), self.top_left() + self.padding, self.font_params);
+	fn render(&mut self, graphics: &mut Graphics, theme: &Theme) {
+		graphics.set_color(theme.fg_color1());
+		graphics.draw_string(self.text.as_str(), self.top_left(), self.font_params);
 	}
 	
 	fn get_preferred_size(&self, graphics: &Graphics) -> Size {
-		graphics.string_size(self.text.as_str(), self.font_params) + (self.padding * 2)
+		graphics.string_size(self.text.as_str(), self.font_params)
 	}
 	
 	fn bounds(&self) -> &WidgetBounds { &self.bounds }

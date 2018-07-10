@@ -4,6 +4,7 @@ use super::widget_bounds::WidgetBounds;
 use utils::size::Size;
 use utils::vec2i::Vec2i;
 use gui::core::graphics::Graphics;
+use gui::core::draw_params::ShapeDrawParams;
 use gui::themes::theme::Theme;
 
 pub struct Button {
@@ -31,8 +32,9 @@ impl Button {
 }
 
 impl Widget for Button {
-	fn render(&self, graphics: &mut Graphics, theme: &Theme) {
+	fn render(&mut self, graphics: &mut Graphics, theme: &Theme) {
 		graphics.set_color(theme.bg_color2());
+		graphics.draw_rect(self.bounds.rect(), ShapeDrawParams::fill());
 		self.label.render(graphics, theme);
 	}
 	
@@ -40,11 +42,11 @@ impl Widget for Button {
 		self.label.get_preferred_size(graphics) + (self.padding * 2)
 	}
 	
-	fn internal_on_move_by(&mut self, delta: Vec2i) {
-		self.label.move_by(delta);
-	}
-	
 	fn bounds(&self) -> &WidgetBounds { &self.bounds }
 	
-	fn set_bounds(&mut self, bounds: WidgetBounds) { self.bounds = bounds }
+	fn set_bounds(&mut self, bounds: WidgetBounds) {
+		let delta = self.bounds.offset_to(&bounds);
+		self.label.move_by(delta);
+		self.bounds = bounds;
+	}
 }

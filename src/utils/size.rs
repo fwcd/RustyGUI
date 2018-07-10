@@ -1,7 +1,7 @@
 use super::vec2i::Vec2i;
 use std::ops::Add;
 
-#[derive(Copy, Clone)]
+#[derive(Debug, Copy, Clone)]
 pub struct Size {
 	pub width: u32,
 	pub height: u32

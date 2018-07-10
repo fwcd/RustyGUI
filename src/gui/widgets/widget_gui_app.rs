@@ -37,7 +37,7 @@ impl WidgetGUIApp {
 impl GUIApplication for WidgetGUIApp {
 	fn root(&mut self) -> &mut Container { &mut self.root }
 	
-	fn render(&self, graphics: &mut Graphics) {
+	fn render(&mut self, graphics: &mut Graphics) {
 		graphics.set_color(self.theme.bg_color1());
 		graphics.clear();
 		self.root.render(graphics, &self.theme);
