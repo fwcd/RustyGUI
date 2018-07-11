@@ -36,6 +36,8 @@ impl Container {
 	
 	pub fn vbox() -> Self { Self::new(Box::new(BoxLayout::vertical())) }
 	
+	pub fn set_layout(&mut self, layout: Box<Layout>) { self.layout = layout }
+	
 	pub fn add(&mut self, child: Shared<Widget>) {
 		self.insert(child, "");
 	}
