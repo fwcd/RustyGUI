@@ -39,4 +39,6 @@ impl WidgetBounds {
 	pub fn height(&self) -> u32 { self.rect.height() }
 	
 	pub fn top_left(&self) -> Vec2i { self.rect.top_left() }
+	
+	pub fn bottom_right(&self) -> Vec2i { self.rect.bottom_right() }
 }

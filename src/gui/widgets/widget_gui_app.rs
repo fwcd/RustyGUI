@@ -4,6 +4,7 @@ use gui::core::mouse::{MouseClickEvent, MouseDragEvent, MouseMoveEvent};
 use gui::core::keyboard::KeyEvent;
 use gui::core::input_responder::InputResponder;
 use gui::themes::theme::Theme;
+use utils::size::Size;
 use super::widget::Widget;
 use super::bounds::WidgetBounds;
 use super::layouts::layout::Layout;
@@ -21,6 +22,7 @@ impl WidgetGUIApp {
 	pub fn new(title: &str, width: u32, height: u32, base_layout: Box<Layout>) -> WidgetGUIApp {
 		let mut root = Container::new(base_layout);
 		root.set_bounds(WidgetBounds::new(0, 0, width, height));
+		root.set_preferred_size(Size::of(width, height));
 		root.set_has_background(false);
 		WidgetGUIApp {
 			title: title.to_string(),

@@ -16,7 +16,8 @@ pub struct Container {
 	childs: Vec<LayoutedWidget>,
 	layout: Box<Layout>,
 	current_id: i32,
-	has_background: bool
+	has_background: bool,
+	preferred_size_override: Option<Size>
 }
 
 impl Container {
@@ -26,7 +27,8 @@ impl Container {
 			childs: Vec::new(),
 			layout: layout,
 			current_id: 0,
-			has_background: true
+			has_background: true,
+			preferred_size_override: None
 		}
 	}
 	
@@ -69,6 +71,17 @@ impl Container {
 	pub fn has_background(&self) -> bool { self.has_background }
 	
 	pub fn set_has_background(&mut self, has_background: bool) { self.has_background = has_background }
+	
+	pub fn set_preferred_size(&mut self, size: Size) { self.preferred_size_override = Some(size) }
+	
+	fn compute_preferred_size(&self) -> Size {
+		self.childs.iter()
+			.map(|child| child.borrow().bounds().rect())
+			.reduce(|a, b| a.merge(b))
+			.map(|rect| rect.size())
+			.unwrap_or(Size::of(0, 0))
+			+ (self.base.padding * 2)
+	}
 }
 
 impl Widget for Container {
@@ -86,12 +99,7 @@ impl Widget for Container {
 	}
 	
 	fn get_preferred_size(&self, _graphics: &Graphics) -> Size {
-		self.childs.iter()
-			.map(|child| child.borrow().bounds().rect())
-			.reduce(|a, b| a.merge(b))
-			.map(|rect| rect.size())
-			.unwrap_or(Size::of(0, 0))
-			+ (self.base.padding * 2)
+		self.preferred_size_override.unwrap_or_else(|| self.compute_preferred_size())
 	}
 	
 	fn bounds(&self) -> &WidgetBounds { &self.base.bounds }
@@ -111,8 +119,7 @@ impl Widget for Container {
 			child.borrow_mut().update_layout_if_needed(graphics);
 		}
 		
-		let top_left = self.top_left();
-		self.layout.arrange(&mut self.childs, top_left, graphics);
+		self.layout.arrange(&mut self.childs, &self.base.bounds, graphics);
 		
 		self.base.needs_relayout = false;
 	}

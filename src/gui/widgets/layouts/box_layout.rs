@@ -23,7 +23,8 @@ impl BoxLayout {
 }
 
 impl Layout for BoxLayout {
-	fn arrange(&self, widgets: &mut Vec<LayoutedWidget>, top_left: Vec2i, graphics: &Graphics) {
+	fn arrange(&self, widgets: &mut Vec<LayoutedWidget>, parent_bounds: &WidgetBounds, graphics: &Graphics) {
+		let top_left = parent_bounds.top_left();
 		let mut draw_pos = top_left + Vec2i::of(self.padding, self.padding);
 		
 		for boxed_widget in widgets {
