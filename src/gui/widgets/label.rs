@@ -36,7 +36,7 @@ impl Widget for Label {
 		graphics.draw_string(self.text.as_str(), self.top_left(), self.font_params);
 	}
 	
-	fn get_preferred_size(&self, graphics: &Graphics) -> Size {
+	fn preferred_size(&self, graphics: &Graphics) -> Size {
 		graphics.string_size(self.text.as_str(), self.font_params)
 	}
 	

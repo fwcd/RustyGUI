@@ -35,8 +35,8 @@ impl Widget for Button {
 		self.label.render(graphics, theme);
 	}
 	
-	fn get_preferred_size(&self, graphics: &Graphics) -> Size {
-		self.label.get_preferred_size(graphics) + (self.base.padding * 2)
+	fn preferred_size(&self, graphics: &Graphics) -> Size {
+		self.label.preferred_size(graphics) + (self.base.padding * 2)
 	}
 	
 	fn bounds(&self) -> &WidgetBounds { &self.base.bounds }

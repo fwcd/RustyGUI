@@ -4,4 +4,6 @@ use gui::core::graphics::Graphics;
 
 pub trait Layout {
 	fn arrange(&self, widgets: &mut Vec<LayoutedWidget>, parent_bounds: &WidgetBounds, graphics: &Graphics);
+	
+	fn uses_parent_padding(&self) -> bool { true }
 }

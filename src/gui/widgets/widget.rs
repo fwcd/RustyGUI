@@ -17,9 +17,13 @@ pub trait Widget: InputResponder {
 	/// Otherwise conflicts may occur.
 	fn set_bounds(&mut self, bounds: WidgetBounds);
 	
-	fn get_preferred_size(&self, graphics: &Graphics) -> Size;
-	
 	fn render(&mut self, graphics: &mut Graphics, theme: &Theme);
+	
+	fn preferred_size(&self, graphics: &Graphics) -> Size;
+	
+	fn preferred_bounds(&self, graphics: &Graphics) -> WidgetBounds {
+		WidgetBounds::from(self.top_left(), self.preferred_size(graphics))
+	}
 	
 	fn top_left(&self) -> Vec2i {
 		self.bounds().rect().top_left()
@@ -43,7 +47,7 @@ pub trait Widget: InputResponder {
 	
 	fn update_layout(&mut self, graphics: &Graphics) {
 		let top_left = self.top_left();
-		let size = self.get_preferred_size(graphics);
+		let size = self.preferred_size(graphics);
 		self.set_bounds(WidgetBounds::from(top_left, size));
 	}
 	

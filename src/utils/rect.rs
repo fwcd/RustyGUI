@@ -38,6 +38,10 @@ impl Rectangle {
 		)
 	}
 	
+	pub fn shrink_centered_by(&self, delta: i32) -> Rectangle {
+		Rectangle::new(self.top_left.x + delta, self.top_left.y + delta, (self.width() as i32 - (delta * 2)) as u32, (self.height() as i32 - (delta * 2)) as u32)
+	}
+	
 	pub fn moved_to(&self, new_top_left: Vec2i) -> Rectangle {
 		Rectangle::of(new_top_left, self.size)
 	}

@@ -10,6 +10,8 @@ use gui::themes::theme::Theme;
 use utils::reduce::Reduce;
 use utils::size::Size;
 use utils::shared::Shared;
+use utils::rect::Rectangle;
+use utils::vec2i::Vec2i;
 
 pub struct Container {
 	base: WidgetBase,
@@ -76,13 +78,19 @@ impl Container {
 	
 	pub fn set_preferred_size(&mut self, size: Size) { self.preferred_size_override = Some(size) }
 	
-	fn compute_preferred_size(&self) -> Size {
+	fn compute_preferred_size(&self, graphics: &Graphics) -> Size {
 		self.childs.iter()
-			.map(|child| child.borrow().bounds().rect())
+			.map(|child| child.borrow().preferred_bounds(graphics).rect())
 			.reduce(|a, b| a.merge(b))
 			.map(|rect| rect.size())
 			.unwrap_or(Size::of(0, 0))
-			+ (self.base.padding * 2)
+			+ (self.actual_padding() * 2)
+	}
+	
+	fn actual_padding(&self) -> Vec2i {
+		if self.layout.uses_parent_padding() {
+			self.base.padding
+		} else { Vec2i::of(0, 0) }
 	}
 }
 
@@ -100,8 +108,8 @@ impl Widget for Container {
 		}
 	}
 	
-	fn get_preferred_size(&self, _graphics: &Graphics) -> Size {
-		self.preferred_size_override.unwrap_or_else(|| self.compute_preferred_size())
+	fn preferred_size(&self, graphics: &Graphics) -> Size {
+		self.preferred_size_override.unwrap_or_else(|| self.compute_preferred_size(graphics))
 	}
 	
 	fn bounds(&self) -> &WidgetBounds { &self.base.bounds }

@@ -16,7 +16,7 @@ impl EmptyWidget {
 impl Widget for EmptyWidget {
 	fn render(&mut self, graphics: &mut Graphics, theme: &Theme) {}
 	
-	fn get_preferred_size(&self, graphics: &Graphics) -> Size { Size::of(0, 0) }
+	fn preferred_size(&self, graphics: &Graphics) -> Size { Size::of(0, 0) }
 	
 	fn bounds(&self) -> &WidgetBounds { &self.base.bounds }
 	
