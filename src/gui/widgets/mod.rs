@@ -6,3 +6,4 @@ pub mod button;
 pub mod label;
 pub mod empty_widget;
 pub mod container;
+pub mod layouted_widget;

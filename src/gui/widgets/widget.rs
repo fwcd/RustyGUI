@@ -41,7 +41,24 @@ pub trait Widget: InputResponder {
 		self.move_by(delta);
 	}
 	
-	fn update_layout(&mut self, graphics: &Graphics) {}
+	fn update_layout(&mut self, graphics: &Graphics) {
+		let top_left = self.top_left();
+		let size = self.get_preferred_size(graphics);
+		self.set_bounds(WidgetBounds::from(top_left, size));
+	}
+	
+	fn update_layout_if_needed(&mut self, graphics: &Graphics) {
+		if self.needs_relayout() { self.update_layout(graphics); }
+	}
+	
+	fn needs_relayout(&self) -> bool {
+		for child in self.responding_childs() {
+			if child.borrow().needs_relayout() { return true; }
+		}
+		self.this_needs_relayout()
+	}
+	
+	fn this_needs_relayout(&self) -> bool { false }
 	
 	fn responding_childs(&self) -> Vec<Shared<Widget>> { Vec::new() }
 	

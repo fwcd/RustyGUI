@@ -2,6 +2,7 @@ use super::widget::Widget;
 use super::widget_bounds::WidgetBounds;
 use super::layouts::layout::Layout;
 use super::layouts::box_layout::BoxLayout;
+use super::layouted_widget::LayoutedWidget;
 use gui::core::graphics::Graphics;
 use gui::core::draw_params::ShapeDrawParams;
 use gui::core::input_responder::InputResponder;
@@ -10,24 +11,15 @@ use utils::reduce::Reduce;
 use utils::vec2i::Vec2i;
 use utils::size::Size;
 use utils::shared::Shared;
-use std::collections::VecDeque;
-
-#[derive(Clone)]
-struct LayoutedWidgetRef {
-	pub widget: Shared<Widget>,
-	pub layout_hint: String,
-	pub id: i32
-}
 
 pub struct Container {
 	bounds: WidgetBounds,
 	padding: Vec2i,
-	childs: Vec<LayoutedWidgetRef>,
+	childs: Vec<LayoutedWidget>,
 	layout: Box<Layout>,
-	added_widgets: VecDeque<LayoutedWidgetRef>,
-	removed_widgets: VecDeque<LayoutedWidgetRef>,
 	current_id: i32,
-	has_background: bool
+	has_background: bool,
+	needs_relayout: bool
 }
 
 impl Container {
@@ -37,10 +29,9 @@ impl Container {
 			padding: Vec2i::of(10, 10),
 			childs: Vec::new(),
 			layout: layout,
-			added_widgets: VecDeque::new(),
-			removed_widgets: VecDeque::new(),
 			current_id: 0,
-			has_background: true
+			has_background: true,
+			needs_relayout: true
 		}
 	}
 	
@@ -59,27 +50,20 @@ impl Container {
 	}
 	
 	pub fn insert_with_id(&mut self, child: Shared<Widget>, layout_hint: &str, id: i32) {
-		let boxed_layout_hint = layout_hint.to_string();
-		let widget = LayoutedWidgetRef {
-			widget: child,
-			layout_hint: boxed_layout_hint,
-			id: id
-		};
+		let widget = LayoutedWidget::of(child, layout_hint, id);
 		
-		self.added_widgets.push_back(widget.clone());
 		self.childs.push(widget);
 	}
 	
 	pub fn remove_with_id(&mut self, id: i32) {
 		let index = self.index_of_id(id).expect("Could not find index of the child widget");
 		let removed = self.childs.remove(index);
-		self.removed_widgets.push_back(removed);
 	}
 	
 	fn index_of_id(&self, id: i32) -> Option<usize> {
 		let mut index: usize = 0;
 		for item in &self.childs {
-			if item.id == id {
+			if item.id() == id {
 				return Some(index);
 			}
 			index += 1;
@@ -94,8 +78,6 @@ impl Container {
 
 impl Widget for Container {
 	fn render(&mut self, graphics: &mut Graphics, theme: &Theme) {
-		self.update_layout(graphics);
-		
 		// Possibly draw background
 		if self.has_background {
 			graphics.set_color(theme.bg_color_soft());
@@ -104,13 +86,13 @@ impl Widget for Container {
 		
 		// Draw child widgets
 		for child in &self.childs {
-			child.widget.borrow_mut().render(graphics, theme);
+			child.borrow_mut().render(graphics, theme);
 		}
 	}
 	
 	fn get_preferred_size(&self, _graphics: &Graphics) -> Size {
 		self.childs.iter()
-			.map(|child| child.widget.borrow().bounds().rect())
+			.map(|child| child.borrow().bounds().rect())
 			.reduce(|a, b| a.merge(b))
 			.map(|rect| rect.size())
 			.unwrap_or(Size::of(0, 0))
@@ -123,29 +105,26 @@ impl Widget for Container {
 		let delta = self.bounds.offset_to(&bounds);
 		
 		for child in &self.childs {
-			child.widget.borrow_mut().move_by(delta);
+			child.borrow_mut().move_by(delta);
 		}
 		
 		self.bounds = bounds;
 	}
 	
 	fn update_layout(&mut self, graphics: &Graphics) {
-		// Layout added widgets
-		while !self.added_widgets.is_empty() {
-			let added = self.added_widgets.pop_front().unwrap();
-			added.widget.borrow_mut().update_layout(graphics);
-			self.layout.on_add_widget(added.widget, &added.layout_hint, graphics);
+		for child in &self.childs {
+			child.borrow_mut().update_layout_if_needed(graphics);
 		}
 		
-		// Layout based on removed widgets
-		while !self.removed_widgets.is_empty() {
-			let removed = self.removed_widgets.pop_front().unwrap();
-			removed.widget.borrow_mut().update_layout(graphics);
-			self.layout.on_remove_widget(removed.widget, &removed.layout_hint, graphics);
-		}
+		let top_left = self.top_left();
+		self.layout.arrange(&mut self.childs, top_left, graphics);
+		
+		self.needs_relayout = false;
 	}
 	
 	fn responding_childs(&self) -> Vec<Shared<Widget>> {
-		self.childs.iter().map(|it| it.widget.clone()).collect::<Vec<Shared<Widget>>>()
+		self.childs.iter().map(|it| it.widget()).collect::<Vec<Shared<Widget>>>()
 	}
+	
+	fn this_needs_relayout(&self) -> bool { self.needs_relayout }
 }

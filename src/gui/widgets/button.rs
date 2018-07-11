@@ -11,7 +11,8 @@ use gui::themes::theme::Theme;
 pub struct Button {
 	bounds: WidgetBounds,
 	padding: Vec2i,
-	label: Label
+	label: Label,
+	needs_relayout: bool
 }
 
 impl Button {
@@ -23,7 +24,8 @@ impl Button {
 		Button {
 			bounds: WidgetBounds::empty(),
 			padding: padding,
-			label: padded_label
+			label: padded_label,
+			needs_relayout: true
 		}
 	}
 	
@@ -54,6 +56,9 @@ impl Widget for Button {
 	fn handle_mouse_down(&mut self, event: MouseClickEvent) -> bool {
 		trace!("Clicked a button");
 		self.label.set_text("Clicked!");
+		self.needs_relayout = true;
 		true
 	}
+	
+	fn this_needs_relayout(&self) -> bool { self.needs_relayout }
 }

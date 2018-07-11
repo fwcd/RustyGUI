@@ -1,9 +1,7 @@
-use gui::widgets::widget::Widget;
+use gui::widgets::layouted_widget::LayoutedWidget;
 use gui::core::graphics::Graphics;
-use utils::shared::Shared;
+use utils::vec2i::Vec2i;
 
 pub trait Layout {
-	fn on_add_widget(&mut self, shared_widget: Shared<Widget>, layout_hint: &String, graphics: &Graphics);
-	
-	fn on_remove_widget(&mut self, shared_widget: Shared<Widget>, layout_hint: &String, graphics: &Graphics);
+	fn arrange(&self, widgets: &mut Vec<LayoutedWidget>, top_left: Vec2i, graphics: &Graphics);
 }

@@ -42,6 +42,7 @@ impl GUIApplication for WidgetGUIApp {
 	fn render(&mut self, graphics: &mut Graphics) {
 		graphics.set_color(self.theme.bg_color_strong());
 		graphics.clear();
+		self.root.update_layout_if_needed(graphics);
 		self.root.render(graphics, &self.theme);
 	}
 	
