@@ -1,5 +1,5 @@
 use super::widget::Widget;
-use super::widget_bounds::WidgetBounds;
+use super::bounds::WidgetBounds;
 use utils::size::Size;
 use utils::vec2i::Vec2i;
 use gui::core::graphics::Graphics;

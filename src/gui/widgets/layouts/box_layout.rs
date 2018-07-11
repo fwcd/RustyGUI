@@ -2,7 +2,7 @@ use super::layout::Layout;
 use gui::core::graphics::Graphics;
 use gui::widgets::widget::Widget;
 use gui::widgets::layouted_widget::LayoutedWidget;
-use gui::widgets::widget_bounds::WidgetBounds;
+use gui::widgets::bounds::WidgetBounds;
 use utils::vec2i::Vec2i;
 use utils::shared::Shared;
 

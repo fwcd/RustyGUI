@@ -1,5 +1,5 @@
 use super::widget::Widget;
-use super::widget_bounds::WidgetBounds;
+use super::bounds::WidgetBounds;
 use super::layouts::layout::Layout;
 use super::layouts::box_layout::BoxLayout;
 use super::layouted_widget::LayoutedWidget;

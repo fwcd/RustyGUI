@@ -5,7 +5,7 @@ use gui::core::keyboard::KeyEvent;
 use gui::core::input_responder::InputResponder;
 use gui::themes::theme::Theme;
 use super::widget::Widget;
-use super::widget_bounds::WidgetBounds;
+use super::bounds::WidgetBounds;
 use super::layouts::layout::Layout;
 use super::container::Container;
 

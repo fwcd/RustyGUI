@@ -1,7 +1,8 @@
 pub mod widget;
 pub mod layouts;
 pub mod widget_gui_app;
-pub mod widget_bounds;
+pub mod bounds;
+pub mod base;
 pub mod button;
 pub mod label;
 pub mod empty_widget;
