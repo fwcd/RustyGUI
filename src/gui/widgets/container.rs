@@ -1,37 +1,32 @@
 use super::widget::Widget;
 use super::bounds::WidgetBounds;
+use super::base::WidgetBase;
 use super::layouts::layout::Layout;
 use super::layouts::box_layout::BoxLayout;
 use super::layouted_widget::LayoutedWidget;
 use gui::core::graphics::Graphics;
 use gui::core::draw_params::ShapeDrawParams;
-use gui::core::input_responder::InputResponder;
 use gui::themes::theme::Theme;
 use utils::reduce::Reduce;
-use utils::vec2i::Vec2i;
 use utils::size::Size;
 use utils::shared::Shared;
 
 pub struct Container {
-	bounds: WidgetBounds,
-	padding: Vec2i,
+	base: WidgetBase,
 	childs: Vec<LayoutedWidget>,
 	layout: Box<Layout>,
 	current_id: i32,
-	has_background: bool,
-	needs_relayout: bool
+	has_background: bool
 }
 
 impl Container {
 	pub fn new(layout: Box<Layout>) -> Self {
 		Container {
-			bounds: WidgetBounds::empty(),
-			padding: Vec2i::of(10, 10),
+			base: WidgetBase::empty(),
 			childs: Vec::new(),
 			layout: layout,
 			current_id: 0,
-			has_background: true,
-			needs_relayout: true
+			has_background: true
 		}
 	}
 	
@@ -81,7 +76,7 @@ impl Widget for Container {
 		// Possibly draw background
 		if self.has_background {
 			graphics.set_color(theme.bg_color_soft());
-			graphics.draw_rect(self.bounds.rect(), ShapeDrawParams::fill());
+			graphics.draw_rect(self.bounds().rect(), ShapeDrawParams::fill());
 		}
 		
 		// Draw child widgets
@@ -96,19 +91,19 @@ impl Widget for Container {
 			.reduce(|a, b| a.merge(b))
 			.map(|rect| rect.size())
 			.unwrap_or(Size::of(0, 0))
-			+ (self.padding * 2)
+			+ (self.base.padding * 2)
 	}
 	
-	fn bounds(&self) -> &WidgetBounds { &self.bounds }
+	fn bounds(&self) -> &WidgetBounds { &self.base.bounds }
 	
 	fn set_bounds(&mut self, bounds: WidgetBounds) {
-		let delta = self.bounds.offset_to(&bounds);
+		let delta = self.bounds().offset_to(&bounds);
 		
 		for child in &self.childs {
 			child.borrow_mut().move_by(delta);
 		}
 		
-		self.bounds = bounds;
+		self.base.bounds = bounds;
 	}
 	
 	fn update_layout(&mut self, graphics: &Graphics) {
@@ -119,12 +114,12 @@ impl Widget for Container {
 		let top_left = self.top_left();
 		self.layout.arrange(&mut self.childs, top_left, graphics);
 		
-		self.needs_relayout = false;
+		self.base.needs_relayout = false;
 	}
 	
 	fn childs(&self) -> Vec<Shared<Widget>> {
 		self.childs.iter().map(|it| it.widget()).collect::<Vec<Shared<Widget>>>()
 	}
 	
-	fn this_needs_relayout(&self) -> bool { self.needs_relayout }
+	fn needs_relayout(&self) -> bool { self.base.needs_relayout }
 }

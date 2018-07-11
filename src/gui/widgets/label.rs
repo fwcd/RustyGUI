@@ -1,14 +1,13 @@
 use super::widget::Widget;
 use super::bounds::WidgetBounds;
+use super::base::WidgetBase;
 use utils::size::Size;
-use utils::vec2i::Vec2i;
 use gui::core::graphics::Graphics;
 use gui::core::font_params::FontParams;
 use gui::themes::theme::Theme;
 
 pub struct Label {
-	bounds: WidgetBounds,
-	padding: Vec2i,
+	base: WidgetBase,
 	font_params: FontParams,
 	text: String
 }
@@ -16,8 +15,7 @@ pub struct Label {
 impl Label {
 	pub fn new(text: &str, font_params: FontParams) -> Label {
 		Label {
-			bounds: WidgetBounds::empty(),
-			padding: Vec2i::of(10, 10),
+			base: WidgetBase::empty(),
 			font_params: font_params,
 			text: text.to_string()
 		}
@@ -42,7 +40,7 @@ impl Widget for Label {
 		graphics.string_size(self.text.as_str(), self.font_params)
 	}
 	
-	fn bounds(&self) -> &WidgetBounds { &self.bounds }
+	fn bounds(&self) -> &WidgetBounds { &self.base.bounds }
 	
-	fn set_bounds(&mut self, bounds: WidgetBounds) { self.bounds = bounds }
+	fn set_bounds(&mut self, bounds: WidgetBounds) { self.base.bounds = bounds }
 }

@@ -1,32 +1,26 @@
 use super::widget::Widget;
 use super::label::Label;
 use super::bounds::WidgetBounds;
+use super::base::WidgetBase;
 use utils::size::Size;
-use utils::vec2i::Vec2i;
 use gui::core::mouse::MouseClickEvent;
 use gui::core::graphics::Graphics;
 use gui::core::draw_params::ShapeDrawParams;
 use gui::themes::theme::Theme;
 
 pub struct Button {
-	bounds: WidgetBounds,
-	padding: Vec2i,
-	label: Label,
-	needs_relayout: bool
+	base: WidgetBase,
+	label: Label
 }
 
 impl Button {
 	pub fn new(label: Label) -> Button {
-		let padding = Vec2i::of(10, 10);
-		let mut padded_label = label;
-		padded_label.move_to(padding);
-		
-		Button {
-			bounds: WidgetBounds::empty(),
-			padding: padding,
-			label: padded_label,
-			needs_relayout: true
-		}
+		let mut instance = Button {
+			base: WidgetBase::empty(),
+			label: label
+		};
+		instance.label.move_by(instance.base.padding);
+		instance
 	}
 	
 	pub fn labelled(text: &str, font_size: u16) -> Button {
@@ -37,28 +31,28 @@ impl Button {
 impl Widget for Button {
 	fn render(&mut self, graphics: &mut Graphics, theme: &Theme) {
 		graphics.set_color(theme.bg_color_soft());
-		graphics.draw_rect(self.bounds.rect(), ShapeDrawParams::fill());
+		graphics.draw_rect(self.base.bounds.rect(), ShapeDrawParams::fill());
 		self.label.render(graphics, theme);
 	}
 	
 	fn get_preferred_size(&self, graphics: &Graphics) -> Size {
-		self.label.get_preferred_size(graphics) + (self.padding * 2)
+		self.label.get_preferred_size(graphics) + (self.base.padding * 2)
 	}
 	
-	fn bounds(&self) -> &WidgetBounds { &self.bounds }
+	fn bounds(&self) -> &WidgetBounds { &self.base.bounds }
 	
 	fn set_bounds(&mut self, bounds: WidgetBounds) {
-		let delta = self.bounds.offset_to(&bounds);
+		let delta = self.base.bounds.offset_to(&bounds);
 		self.label.move_by(delta);
-		self.bounds = bounds;
+		self.base.bounds = bounds;
 	}
 	
 	fn handle_mouse_down(&mut self, event: MouseClickEvent) -> bool {
 		trace!("Clicked a button");
 		self.label.set_text("Clicked!");
-		self.needs_relayout = true;
+		self.base.needs_relayout = true;
 		true
 	}
 	
-	fn this_needs_relayout(&self) -> bool { self.needs_relayout }
+	fn needs_relayout(&self) -> bool { self.base.needs_relayout }
 }

@@ -1,16 +1,16 @@
 use super::widget::Widget;
 use super::bounds::WidgetBounds;
+use super::base::WidgetBase;
 use utils::size::Size;
 use gui::core::graphics::Graphics;
 use gui::themes::theme::Theme;
 
-#[derive(Debug)]
 pub struct EmptyWidget {
-	bounds: WidgetBounds
+	base: WidgetBase
 }
 
 impl EmptyWidget {
-	pub fn new() -> EmptyWidget { EmptyWidget { bounds: WidgetBounds::empty() } }
+	pub fn new() -> EmptyWidget { EmptyWidget { base: WidgetBase::empty() } }
 }
 
 impl Widget for EmptyWidget {
@@ -18,7 +18,7 @@ impl Widget for EmptyWidget {
 	
 	fn get_preferred_size(&self, graphics: &Graphics) -> Size { Size::of(0, 0) }
 	
-	fn bounds(&self) -> &WidgetBounds { &self.bounds }
+	fn bounds(&self) -> &WidgetBounds { &self.base.bounds }
 	
-	fn set_bounds(&mut self, bounds: WidgetBounds) { self.bounds = bounds }
+	fn set_bounds(&mut self, bounds: WidgetBounds) { self.base.bounds = bounds }
 }

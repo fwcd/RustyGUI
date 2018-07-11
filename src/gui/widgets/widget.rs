@@ -48,17 +48,19 @@ pub trait Widget: InputResponder {
 	}
 	
 	fn update_layout_if_needed(&mut self, graphics: &Graphics) {
-		if self.needs_relayout() { self.update_layout(graphics); }
-	}
-	
-	fn needs_relayout(&self) -> bool {
-		for child in self.childs() {
-			if child.borrow().needs_relayout() { return true; }
+		if self.or_any_child_needs_relayout() {
+			self.update_layout(graphics);
 		}
-		self.this_needs_relayout()
 	}
 	
-	fn this_needs_relayout(&self) -> bool { false }
+	fn or_any_child_needs_relayout(&self) -> bool {
+		for child in self.childs() {
+			if child.borrow().or_any_child_needs_relayout() { return true; }
+		}
+		self.needs_relayout()
+	}
+	
+	fn needs_relayout(&self) -> bool { false }
 	
 	fn childs(&self) -> Vec<Shared<Widget>> { Vec::new() }
 	
