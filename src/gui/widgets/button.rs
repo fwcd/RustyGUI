@@ -10,14 +10,16 @@ use gui::themes::theme::Theme;
 
 pub struct Button {
 	base: WidgetBase,
-	label: Label
+	label: Label,
+	active: bool
 }
 
 impl Button {
 	pub fn new(label: Label) -> Button {
 		let mut instance = Button {
 			base: WidgetBase::empty(),
-			label: label
+			label: label,
+			active: false
 		};
 		instance.label.move_by(instance.base.padding);
 		instance
@@ -30,7 +32,13 @@ impl Button {
 
 impl Widget for Button {
 	fn render(&mut self, graphics: &mut Graphics, theme: &Theme) {
-		graphics.set_color(theme.bg().translucent());
+		let mut color = theme.bg().translucent();
+		
+		if self.active {
+			color = color.with_half_alpha();
+		}
+		
+		graphics.set_color(color);
 		graphics.draw_rect(self.base.bounds.rect(), ShapeDrawParams::fill());
 		self.label.render(graphics, theme);
 	}
@@ -51,6 +59,12 @@ impl Widget for Button {
 		trace!("Clicked a button");
 		self.label.set_text("Clicked!");
 		self.base.needs_relayout = true;
+		self.active = true;
+		true
+	}
+	
+	fn handle_mouse_up(&mut self, event: MouseClickEvent) -> bool {
+		self.active = false;
 		true
 	}
 	
