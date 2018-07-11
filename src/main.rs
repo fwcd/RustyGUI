@@ -36,6 +36,7 @@ fn main() {
 		let root = app.root();
 		root.add(share(Button::labelled("Test", 32)));
 		root.add(share(Label::of("Demo", 15)));
+		root.add(share(Slider::new(0.0..=10.0)));
 		let mut container = Container::vbox();
 		container.add(share(Button::labelled("One", 12)));
 		container.add(share(Button::labelled("Two", 12)));
@@ -43,7 +44,6 @@ fn main() {
 		nested.insert(share(Button::labelled("Nested button", 12)), TOP_POS);
 		nested.insert(share(Button::labelled("Just a large button", 12)), LEFT_POS);
 		nested.insert(share(Label::of("Label", 12)), RIGHT_POS);
-		// nested.insert(share(Slider::new(0.0..=10.0)), RIGHT_POS);
 		container.add(share(nested));
 		container.add(share(Button::labelled("Three", 12)));
 		root.add(share(container));

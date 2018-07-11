@@ -30,7 +30,7 @@ impl Button {
 
 impl Widget for Button {
 	fn render(&mut self, graphics: &mut Graphics, theme: &Theme) {
-		graphics.set_color(theme.bg_color_soft());
+		graphics.set_color(theme.bg().translucent());
 		graphics.draw_rect(self.base.bounds.rect(), ShapeDrawParams::fill());
 		self.label.render(graphics, theme);
 	}

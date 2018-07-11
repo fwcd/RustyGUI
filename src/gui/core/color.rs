@@ -23,6 +23,8 @@ impl Color {
 	
 	pub fn yellow() -> Color     { Color::rgb(255, 255, 0)   }
 	
+	pub fn orange() -> Color     { Color::rgb(255, 128, 0)   }
+	
 	pub fn green() -> Color      { Color::rgb(0,   255, 0)   }
 	
 	pub fn blue() -> Color       { Color::rgb(0,   0,   255) }

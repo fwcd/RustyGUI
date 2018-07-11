@@ -28,9 +28,9 @@ impl Slider {
 
 impl Widget for Slider {
 	fn render(&mut self, graphics: &mut Graphics, theme: &Theme) {
-		graphics.set_color(theme.bg_color_soft());
+		graphics.set_color(theme.bg().translucent());
 		graphics.draw_rect(self.bounds().rect(), ShapeDrawParams::fill());
-		graphics.set_color(theme.bg_color_strong());
+		graphics.set_color(theme.bg().strong());
 		graphics.draw_rect(self.base.bounds.rect().shrink_centered_by(self.preferred_size.height as i32 / 4), ShapeDrawParams::fill());
 	}
 	
