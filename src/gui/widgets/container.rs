@@ -129,7 +129,8 @@ impl Widget for Container {
 			child.borrow_mut().update_layout_if_needed(graphics);
 		}
 		
-		self.layout.arrange(&mut self.childs, &self.base.bounds, graphics);
+		let bounds = self.preferred_bounds(graphics);
+		self.layout.arrange(&mut self.childs, &bounds, graphics);
 		
 		self.base.needs_relayout = false;
 	}
