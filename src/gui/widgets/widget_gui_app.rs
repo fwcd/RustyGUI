@@ -53,15 +53,15 @@ impl GUIApplication for WidgetGUIApp {
 }
 
 impl InputResponder for WidgetGUIApp {
-	fn on_mouse_down(&mut self, event: MouseClickEvent) {}
+	fn on_mouse_down(&mut self, event: MouseClickEvent) -> bool { self.root.on_mouse_down(event) }
 	
-	fn on_mouse_up(&mut self, event: MouseClickEvent) {}
+	fn on_mouse_up(&mut self, event: MouseClickEvent) -> bool { self.root.on_mouse_up(event) }
 	
-	fn on_mouse_move(&mut self, event: MouseMoveEvent) {}
+	fn on_mouse_move(&mut self, event: MouseMoveEvent) -> bool { false }
 	
-	fn on_mouse_drag(&mut self, event: MouseDragEvent) {}
+	fn on_mouse_drag(&mut self, event: MouseDragEvent) -> bool { false }
 	
-	fn on_key_down(&mut self, event: KeyEvent) {}
+	fn on_key_down(&mut self, event: KeyEvent) -> bool { false }
 	
-	fn on_key_up(&mut self, event: KeyEvent) {}
+	fn on_key_up(&mut self, event: KeyEvent) -> bool { false }
 }

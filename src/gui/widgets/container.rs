@@ -4,6 +4,7 @@ use super::layouts::layout::Layout;
 use super::layouts::box_layout::BoxLayout;
 use gui::core::graphics::Graphics;
 use gui::core::draw_params::ShapeDrawParams;
+use gui::core::input_responder::InputResponder;
 use gui::themes::theme::Theme;
 use utils::reduce::Reduce;
 use utils::vec2i::Vec2i;
@@ -142,5 +143,9 @@ impl Widget for Container {
 			removed.widget.borrow_mut().update_layout(graphics);
 			self.layout.on_remove_widget(removed.widget, &removed.layout_hint, graphics);
 		}
+	}
+	
+	fn responding_childs(&self) -> Vec<Shared<Widget>> {
+		self.childs.iter().map(|it| it.widget.clone()).collect::<Vec<Shared<Widget>>>()
 	}
 }

@@ -1,3 +1,4 @@
+#[derive(Copy, Clone)]
 pub struct KeyEvent {
 	key_char: char
 }

@@ -3,6 +3,7 @@ use super::label::Label;
 use super::widget_bounds::WidgetBounds;
 use utils::size::Size;
 use utils::vec2i::Vec2i;
+use gui::core::mouse::MouseClickEvent;
 use gui::core::graphics::Graphics;
 use gui::core::draw_params::ShapeDrawParams;
 use gui::themes::theme::Theme;
@@ -48,5 +49,11 @@ impl Widget for Button {
 		let delta = self.bounds.offset_to(&bounds);
 		self.label.move_by(delta);
 		self.bounds = bounds;
+	}
+	
+	fn handle_mouse_down(&mut self, event: MouseClickEvent) -> bool {
+		trace!("Clicked a button");
+		self.label.set_text("Clicked!");
+		true
 	}
 }

@@ -26,6 +26,10 @@ impl Label {
 	pub fn of(text: &str, font_size: u16) -> Label {
 		Label::new(text, FontParams::of_size(font_size))
 	}
+	
+	pub fn text(&self) -> &str { self.text.as_str() }
+	
+	pub fn set_text(&mut self, text: &str) { self.text = text.to_string() }
 }
 
 impl Widget for Label {

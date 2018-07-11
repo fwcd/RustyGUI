@@ -1,11 +1,15 @@
 use super::widget_bounds::WidgetBounds;
 use utils::size::Size;
 use utils::vec2i::Vec2i;
+use utils::shared::Shared;
 use gui::core::graphics::Graphics;
+use gui::core::input_responder::InputResponder;
+use gui::core::mouse::{MouseClickEvent, MouseDragEvent, MouseMoveEvent};
+use gui::core::keyboard::KeyEvent;
 use gui::themes::theme::Theme;
 
 /// A GUI widget
-pub trait Widget {
+pub trait Widget: InputResponder {
 	fn bounds(&self) -> &WidgetBounds;
 	
 	/// This method should ONLY be called inside of
@@ -38,4 +42,70 @@ pub trait Widget {
 	}
 	
 	fn update_layout(&mut self, graphics: &Graphics) {}
+	
+	fn responding_childs(&self) -> Vec<Shared<Widget>> { Vec::new() }
+	
+	fn handle_mouse_down(&mut self, event: MouseClickEvent) -> bool { false }
+	
+	fn handle_mouse_up(&mut self, event: MouseClickEvent) -> bool { false }
+	
+	fn handle_mouse_move(&mut self, event: MouseMoveEvent) -> bool { false }
+	
+	fn handle_mouse_drag(&mut self, event: MouseDragEvent) -> bool { false }
+	
+	fn handle_key_down(&mut self, event: KeyEvent) -> bool { false }
+	
+	fn handle_key_up(&mut self, event: KeyEvent) -> bool { false }
+}
+
+impl <W> InputResponder for W where W: Widget {
+	fn on_mouse_down(&mut self, event: MouseClickEvent) -> bool {
+		for child in self.responding_childs() {
+			let mut borrowed_child = child.borrow_mut();
+			let contains_pos = borrowed_child.bounds().rect().contains(event.pos);
+			if contains_pos && borrowed_child.on_mouse_down(event) { return true; }
+		}
+		self.handle_mouse_down(event)
+	}
+	
+	fn on_mouse_up(&mut self, event: MouseClickEvent) -> bool {
+		for child in self.responding_childs() {
+			let mut borrowed_child = child.borrow_mut();
+			let contains_pos = borrowed_child.bounds().rect().contains(event.pos);
+			if contains_pos && borrowed_child.on_mouse_up(event) { return true; }
+		}
+		self.handle_mouse_up(event)
+	}
+	
+	fn on_mouse_move(&mut self, event: MouseMoveEvent) -> bool {
+		for child in self.responding_childs() {
+			let mut borrowed_child = child.borrow_mut();
+			let contains_pos = borrowed_child.bounds().rect().contains(event.pos);
+			if contains_pos && borrowed_child.on_mouse_move(event) { return true; }
+		}
+		self.handle_mouse_move(event)
+	}
+	
+	fn on_mouse_drag(&mut self, event: MouseDragEvent) -> bool {
+		for child in self.responding_childs() {
+			let mut borrowed_child = child.borrow_mut();
+			let contains_pos = borrowed_child.bounds().rect().contains(event.pos);
+			if contains_pos && borrowed_child.on_mouse_drag(event) { return true; }
+		}
+		self.handle_mouse_drag(event)
+	}
+	
+	fn on_key_down(&mut self, event: KeyEvent) -> bool {
+		for child in self.responding_childs() {
+			if child.borrow_mut().on_key_down(event) { return true; }
+		}
+		self.handle_key_down(event)
+	}
+	
+	fn on_key_up(&mut self, event: KeyEvent) -> bool {
+		for child in self.responding_childs() {
+			if child.borrow_mut().on_key_up(event) { return true; }
+		}
+		self.handle_key_up(event)
+	}
 }

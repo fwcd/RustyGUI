@@ -8,20 +8,24 @@ pub enum MouseButton {
 	Other
 }
 
+#[derive(Copy, Clone)]
 pub struct MousePosEvent {
 	pub pos: Vec2i
 }
 
+#[derive(Copy, Clone)]
 pub struct MouseClickEvent {
 	pub pos: Vec2i,
 	pub button: MouseButton
 }
 
+#[derive(Copy, Clone)]
 pub struct MouseMoveEvent {
 	pub last_pos: Vec2i,
 	pub pos: Vec2i
 }
 
+#[derive(Copy, Clone)]
 pub struct MouseDragEvent {
 	pub last_pos: Vec2i,
 	pub pos: Vec2i,
