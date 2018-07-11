@@ -15,7 +15,7 @@ impl Theme {
 			fg_color_strong: Color::black(),
 			fg_color_soft: Color::dark_gray(),
 			bg_color_strong: Color::white(),
-			bg_color_soft: Color::black().with_alpha(50)
+			bg_color_soft: Color::black().with_alpha(64)
 		}
 	}
 	
@@ -24,7 +24,7 @@ impl Theme {
 			fg_color_strong: Color::white(),
 			fg_color_soft: Color::light_gray(),
 			bg_color_strong: Color::black(),
-			bg_color_soft: Color::dark_gray()
+			bg_color_soft: Color::white().with_alpha(64)
 		}
 	}
 	

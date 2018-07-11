@@ -52,7 +52,7 @@ pub trait Widget: InputResponder {
 	}
 	
 	fn needs_relayout(&self) -> bool {
-		for child in self.responding_childs() {
+		for child in self.childs() {
 			if child.borrow().needs_relayout() { return true; }
 		}
 		self.this_needs_relayout()
@@ -60,7 +60,7 @@ pub trait Widget: InputResponder {
 	
 	fn this_needs_relayout(&self) -> bool { false }
 	
-	fn responding_childs(&self) -> Vec<Shared<Widget>> { Vec::new() }
+	fn childs(&self) -> Vec<Shared<Widget>> { Vec::new() }
 	
 	fn handle_mouse_down(&mut self, event: MouseClickEvent) -> bool { false }
 	
@@ -77,7 +77,7 @@ pub trait Widget: InputResponder {
 
 impl <W> InputResponder for W where W: Widget {
 	fn on_mouse_down(&mut self, event: MouseClickEvent) -> bool {
-		for child in self.responding_childs() {
+		for child in self.childs() {
 			let mut borrowed_child = child.borrow_mut();
 			let contains_pos = borrowed_child.bounds().rect().contains(event.pos);
 			if contains_pos && borrowed_child.on_mouse_down(event) { return true; }
@@ -86,7 +86,7 @@ impl <W> InputResponder for W where W: Widget {
 	}
 	
 	fn on_mouse_up(&mut self, event: MouseClickEvent) -> bool {
-		for child in self.responding_childs() {
+		for child in self.childs() {
 			let mut borrowed_child = child.borrow_mut();
 			let contains_pos = borrowed_child.bounds().rect().contains(event.pos);
 			if contains_pos && borrowed_child.on_mouse_up(event) { return true; }
@@ -95,7 +95,7 @@ impl <W> InputResponder for W where W: Widget {
 	}
 	
 	fn on_mouse_move(&mut self, event: MouseMoveEvent) -> bool {
-		for child in self.responding_childs() {
+		for child in self.childs() {
 			let mut borrowed_child = child.borrow_mut();
 			let contains_pos = borrowed_child.bounds().rect().contains(event.pos);
 			if contains_pos && borrowed_child.on_mouse_move(event) { return true; }
@@ -104,7 +104,7 @@ impl <W> InputResponder for W where W: Widget {
 	}
 	
 	fn on_mouse_drag(&mut self, event: MouseDragEvent) -> bool {
-		for child in self.responding_childs() {
+		for child in self.childs() {
 			let mut borrowed_child = child.borrow_mut();
 			let contains_pos = borrowed_child.bounds().rect().contains(event.pos);
 			if contains_pos && borrowed_child.on_mouse_drag(event) { return true; }
@@ -113,14 +113,14 @@ impl <W> InputResponder for W where W: Widget {
 	}
 	
 	fn on_key_down(&mut self, event: KeyEvent) -> bool {
-		for child in self.responding_childs() {
+		for child in self.childs() {
 			if child.borrow_mut().on_key_down(event) { return true; }
 		}
 		self.handle_key_down(event)
 	}
 	
 	fn on_key_up(&mut self, event: KeyEvent) -> bool {
-		for child in self.responding_childs() {
+		for child in self.childs() {
 			if child.borrow_mut().on_key_up(event) { return true; }
 		}
 		self.handle_key_up(event)

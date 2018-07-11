@@ -122,7 +122,7 @@ impl Widget for Container {
 		self.needs_relayout = false;
 	}
 	
-	fn responding_childs(&self) -> Vec<Shared<Widget>> {
+	fn childs(&self) -> Vec<Shared<Widget>> {
 		self.childs.iter().map(|it| it.widget()).collect::<Vec<Shared<Widget>>>()
 	}
 	
