@@ -36,16 +36,27 @@ fn main() {
 		root.add(share(Button::labelled("Test", 32)));
 		root.add(share(Label::of("Demo", 15)));
 		root.add(share(Slider::new(0.0..=10.0)));
-		let mut container = Container::vbox();
-		container.add(share(Button::labelled("One", 12)));
-		container.add(share(Button::labelled("Two", 12)));
-		let mut nested = Container::new(Box::new(BorderLayout::new()));
-		nested.insert(share(Button::labelled("Nested button", 12)), TOP_POS);
-		nested.insert(share(Button::labelled("Just a large button", 12)), LEFT_POS);
-		nested.insert(share(Label::of("Label", 12)), RIGHT_POS);
-		container.add(share(nested));
-		container.add(share(Button::labelled("Three", 12)));
-		root.add(share(container));
+		root.add(share({
+			let mut container = Container::vbox();
+			container.add(share(Button::labelled("One", 12)));
+			container.add(share(Button::labelled("Two", 12)));
+			container.add(share({
+				let mut nested = Container::new(Box::new(BorderLayout::new()));
+				nested.insert(share(Button::labelled("Nested button", 12)), TOP_POS);
+				nested.insert(share(Button::labelled("Just a large button", 12)), LEFT_POS);
+				nested.insert(share(Label::of("Label", 12)), RIGHT_POS);
+				nested
+			}));
+			container.add(share({
+				let mut nested = Container::hbox();
+				nested.add(share(Button::labelled("A", 12)));
+				nested.add(share(Button::labelled("B", 12)));
+				nested.add(share(Button::labelled("C", 12)));
+				nested
+			}));
+			container.add(share(Button::labelled("Three", 12)));
+			container
+		}));
 	}
 	run_gui_app(&mut app);
 }
