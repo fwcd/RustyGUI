@@ -77,13 +77,14 @@ impl <'g> Graphics for SDL2Graphics<'g> {
 	}
 	
 	fn draw_rect(&mut self, rectangle: APIRect, params: ShapeDrawParams) {
-		self.canvas.set_draw_color(sdl2_color_of(params.color()));
-		let sdl2_rect = sdl2_rect_of(rectangle);
+		let tl = rectangle.top_left();
+		let br = rectangle.bottom_right();
+		let (x1, y1, x2, y2, c) = (tl.x as i16, tl.y as i16, br.x as i16, br.y as i16, params.color());
 		if params.filled() {
-			let _ = self.canvas.fill_rect(sdl2_rect);
+			let _ = self.canvas.box_(x1, y1, x2, y2, c);
 		}
 		if params.outlined() {
-			let _ = self.canvas.draw_rect(sdl2_rect);
+			let _ = self.canvas.rectangle(x1, y1, x2, y2, c);
 		}
 	}
 	
@@ -94,8 +95,7 @@ impl <'g> Graphics for SDL2Graphics<'g> {
 	}
 	
 	fn draw_oval(&mut self, center: Vec2i, radius_x: u32, radius_y: u32, params: ShapeDrawParams) {
-		self.canvas.set_draw_color(sdl2_color_of(params.color()));
-		let (x, y, rx, ry, c) = (center.x as i16, center.y as i16, radius_x as i16, radius_y as i16, self.canvas.draw_color());
+		let (x, y, rx, ry, c) = (center.x as i16, center.y as i16, radius_x as i16, radius_y as i16, params.color());
 		if params.filled() {
 			self.canvas.filled_ellipse(x, y, rx, ry, c).unwrap();
 		}
