@@ -1,6 +1,7 @@
 use super::widget::Widget;
 use super::base::WidgetBase;
 use utils::size::Size;
+use utils::rect::Rectangle;
 use gui::core::mouse::MouseClickEvent;
 use gui::core::graphics::Graphics;
 use gui::core::draw_params::ShapeDrawParams;
@@ -10,15 +11,18 @@ use std::ops::RangeInclusive;
 pub struct Slider {
 	base: WidgetBase,
 	preferred_size: Size,
-	range: RangeInclusive<f32>
+	range: RangeInclusive<f32>,
+	knob_size: Size
 }
 
 impl Slider {
 	pub fn new(range: RangeInclusive<f32>) -> Slider {
+		let preferred_size = Size::of(200, 50);
 		Slider {
 			base: WidgetBase::empty(),
-			preferred_size: Size::of(200, 50),
-			range: range
+			preferred_size: preferred_size,
+			range: range,
+			knob_size: Size::of(preferred_size.height, preferred_size.height)
 		}
 	}
 	
@@ -27,10 +31,15 @@ impl Slider {
 
 impl Widget for Slider {
 	fn render(&mut self, graphics: &mut Graphics, theme: &Theme) {
+		// Draw background
 		graphics.set_color(theme.bg().translucent());
 		graphics.draw_rect(self.bounds().rect(), ShapeDrawParams::fill());
-		graphics.set_color(theme.bg().strong());
-		graphics.draw_rect(self.base.bounds().rect().shrink_centered_by(self.preferred_size.height as i32 / 4), ShapeDrawParams::fill());
+		
+		// Draw knob
+		let knob_bounds = Rectangle::of(self.top_left(), self.knob_size);
+		
+		graphics.set_color(theme.fg().strong());
+		graphics.draw_oval_in(knob_bounds, ShapeDrawParams::fill());
 	}
 	
 	fn preferred_size(&self, _graphics: &Graphics) -> Size { self.preferred_size }

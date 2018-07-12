@@ -10,3 +10,4 @@
         * preferably only re-render the sections that are needed
     * Sliders
     * Image widgets
+    * Macros to create widget hierarchies

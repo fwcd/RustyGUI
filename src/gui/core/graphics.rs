@@ -18,6 +18,10 @@ pub trait Graphics {
 	
 	fn draw_string(&mut self, text: &str, pos: Vec2i, params: FontParams);
 	
+	fn draw_circle(&mut self, center: Vec2i, radius: u32, params: ShapeDrawParams) {
+		self.draw_oval(center, radius, radius, params)
+	}
+	
 	fn draw_oval_in(&mut self, rectangle: APIRect, params: ShapeDrawParams) {
 		self.draw_oval(rectangle.center(), rectangle.width() / 2, rectangle.height() / 2, params)
 	}
