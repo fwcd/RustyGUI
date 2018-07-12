@@ -5,10 +5,7 @@ extern crate simple_logger;
 
 mod gui;
 mod utils;
-mod view;
-mod model;
 
-use gui::core::gui_application::GUIApplication;
 use gui::themes::theme::Theme;
 use gui::widgets::widget_gui_app::WidgetGUIApp;
 use gui::widgets::layouts::box_layout::BoxLayout;
@@ -23,7 +20,7 @@ use utils::shared::share;
 fn main() {
 	simple_logger::init_with_level(log::Level::Trace).expect("Could not initialize logger");
 	
-	let title = "VinylFlow";
+	let title = "RustyGUI";
 	let width = 640;
 	let height = 480;
 	let layout = BoxLayout::horizontal();

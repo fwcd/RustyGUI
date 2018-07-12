@@ -7,11 +7,11 @@
 		{
 			"type": "lldb",
 			"request": "launch",
-			"name": "Debug vinylflow",
+			"name": "Debug rustygui",
 			"cargo": {
 				"args": [
 					"build",
-					"--bin=vinylflow"
+					"--bin=rustygui"
 				]
 			},
 			"args": [],
@@ -20,12 +20,12 @@
 		{
 			"type": "lldb",
 			"request": "launch",
-			"name": "Debug tests in vinylflow",
+			"name": "Debug tests in rustygui",
 			"cargo": {
 				"args": [
 					"test",
 					"--no-run",
-					"--bin=vinylflow"
+					"--bin=rustygui"
 				]
 			},
 			"args": [],

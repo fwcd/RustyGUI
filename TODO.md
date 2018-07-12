@@ -9,12 +9,3 @@
     * Sliders
     * Drag lock (remember the widget the mouse clicked on when dragging)
     * Image widgets
-* Application level
-    * Audio playback
-    * Audio controls
-    * Waveforms
-    * Fader
-    * EQ
-    * Multiple decks
-    * Library management
-    * Discord API

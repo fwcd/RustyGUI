@@ -1,5 +1,5 @@
-# VinylFlow
-DJing application that uses Rust and a custom GUI toolkit based upon SDL2.
+# RustyGUI
+GUI toolkit based upon SDL2.
 
 ## System Dependencies
 * Rust and Cargo
