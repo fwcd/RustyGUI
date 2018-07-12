@@ -1,9 +1,11 @@
 # TODO
 
-* Graphics level
+* General
+    * Add `lib.rs` and move the current `main.rs` to a test
+* Graphics
     * Ovals
     * Images
-* GUI level
+* GUI
     * Update GUI only when needed (not always at 60 FPS)
         * preferably only re-render the sections that are needed
     * Sliders
