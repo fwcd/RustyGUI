@@ -32,7 +32,7 @@ fn main() {
 		let mut gui = app.borrow_gui_mut();
 		gui.set_theme(Theme::dark());
 		
-		let root = gui.root();
+		let mut root = gui.borrow_root_mut();
 		root.add(share(Button::labelled("Test", 32)));
 		root.add(share(Label::of("Demo", 15)));
 		root.add(share(Slider::new(0.0..=10.0)));
