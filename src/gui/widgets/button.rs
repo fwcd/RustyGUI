@@ -47,9 +47,8 @@ impl Widget for Button {
 		}
 		
 		let bounds = self.base.bounds().rect();
-		let params = ShapeDrawParams::fill();
+		let params = ShapeDrawParams::fill(color);
 		
-		graphics.set_color(color);
 		if self.is_round {
 			graphics.draw_oval_in(bounds, params);
 		} else {

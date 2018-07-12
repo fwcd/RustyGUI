@@ -32,14 +32,12 @@ impl Slider {
 impl Widget for Slider {
 	fn render(&mut self, graphics: &mut Graphics, theme: &Theme) {
 		// Draw background
-		graphics.set_color(theme.bg().translucent());
-		graphics.draw_rect(self.bounds().rect(), ShapeDrawParams::fill());
+		graphics.draw_rect(self.bounds().rect(), ShapeDrawParams::fill(theme.bg().translucent()));
 		
 		// Draw knob
 		let knob_bounds = Rectangle::of(self.top_left(), self.knob_size);
 		
-		graphics.set_color(theme.fg().strong());
-		graphics.draw_oval_in(knob_bounds, ShapeDrawParams::fill());
+		graphics.draw_oval_in(knob_bounds, ShapeDrawParams::fill(theme.fg().strong()));
 	}
 	
 	fn preferred_size(&self, _graphics: &Graphics) -> Size { self.preferred_size }

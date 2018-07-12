@@ -6,9 +6,7 @@ use super::draw_params::ShapeDrawParams;
 use super::font_params::FontParams;
 
 pub trait Graphics {
-	fn clear(&mut self);
-	
-	fn set_color(&mut self, color: APIColor);
+	fn clear(&mut self, color: APIColor);
 	
 	fn draw_rect(&mut self, rectangle: APIRect, params: ShapeDrawParams);
 	

@@ -60,8 +60,7 @@ impl WidgetGUI {
 	pub fn set_dragged(&mut self, dragged: WeakShared<Widget>) { self.dragged = Some(dragged) }
 	
 	pub fn render(&mut self, graphics: &mut Graphics) {
-		graphics.set_color(self.theme.bg().strong());
-		graphics.clear();
+		graphics.clear(self.theme.bg().strong());
 		let mut root = self.root.borrow_mut();
 		root.update_layout_if_needed(graphics);
 		root.render(graphics, &self.theme);

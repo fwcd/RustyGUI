@@ -8,7 +8,7 @@ use utils::vec2i::Vec2i;
 use gui::core::gui_application::GUIApplication;
 use gui::core::mouse::{MouseClickEvent, MouseDragEvent, MouseMoveEvent};
 use gui::core::mouse::MouseButton as APIMouseButton;
-use gui::core::api_bridge::{api_mouse_button_of};
+use super::api_bridge::{api_mouse_button_of};
 use super::sdl2_graphics::SDL2Graphics;
 
 pub fn run_gui_app(app: &mut GUIApplication) {

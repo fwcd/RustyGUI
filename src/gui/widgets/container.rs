@@ -102,8 +102,8 @@ impl Widget for Container {
 	fn render(&mut self, graphics: &mut Graphics, theme: &Theme) {
 		// Possibly draw background
 		if self.has_background {
-			graphics.set_color(theme.bg().translucent());
-			graphics.draw_rect(self.bounds().rect(), ShapeDrawParams::fill());
+			let color = theme.bg().translucent();
+			graphics.draw_rect(self.bounds().rect(), ShapeDrawParams::fill(color));
 		}
 		
 		// Draw child widgets

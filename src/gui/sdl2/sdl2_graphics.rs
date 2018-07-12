@@ -11,9 +11,9 @@ use utils::rect::Rectangle as APIRect;
 use gui::core::color::Color as APIColor;
 use gui::core::draw_params::ShapeDrawParams;
 use gui::core::font_params::FontParams;
-use gui::core::api_bridge::{sdl2_color_of, sdl2_rect_of};
 use gui::core::graphics::Graphics;
 use std::path::Path;
+use super::api_bridge::{sdl2_color_of, sdl2_rect_of};
 
 /// A class wrapping the SDL2 graphics context to decouple
 /// the application from the API.
@@ -71,15 +71,13 @@ impl <'g> SDL2Graphics<'g> {
 }
 
 impl <'g> Graphics for SDL2Graphics<'g> {
-	fn clear(&mut self) {
+	fn clear(&mut self, color: APIColor) {
+		self.canvas.set_draw_color(sdl2_color_of(color));
 		self.canvas.clear();
 	}
 	
-	fn set_color(&mut self, color: APIColor) {
-		self.canvas.set_draw_color(sdl2_color_of(color));
-	}
-	
 	fn draw_rect(&mut self, rectangle: APIRect, params: ShapeDrawParams) {
+		self.canvas.set_draw_color(sdl2_color_of(params.color()));
 		let sdl2_rect = sdl2_rect_of(rectangle);
 		if params.filled() {
 			let _ = self.canvas.fill_rect(sdl2_rect);
@@ -96,6 +94,7 @@ impl <'g> Graphics for SDL2Graphics<'g> {
 	}
 	
 	fn draw_oval(&mut self, center: Vec2i, radius_x: u32, radius_y: u32, params: ShapeDrawParams) {
+		self.canvas.set_draw_color(sdl2_color_of(params.color()));
 		let (x, y, rx, ry, c) = (center.x as i16, center.y as i16, radius_x as i16, radius_y as i16, self.canvas.draw_color());
 		if params.filled() {
 			self.canvas.filled_ellipse(x, y, rx, ry, c).unwrap();
@@ -107,7 +106,7 @@ impl <'g> Graphics for SDL2Graphics<'g> {
 	
 	fn draw_string(&mut self, text: &str, pos: Vec2i, params: FontParams) {
 		let texture_creator = self.canvas.texture_creator();
-		let texture = Self::string_to_texture(&self.ttf, self.font_path, &texture_creator, text, params, self.canvas.draw_color());
+		let texture = Self::string_to_texture(&self.ttf, self.font_path, &texture_creator, text, params, sdl2_color_of(params.color().unwrap_or(APIColor::black())));
 		let size = Self::texture_size(&texture);
 		let bounds = SDL2Rect::new(pos.x, pos.y, size.width, size.height);
 		self.canvas.copy(&texture, None, Some(bounds))
