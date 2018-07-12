@@ -1,5 +1,6 @@
 use super::bounds::WidgetBounds;
 use super::gui::WidgetGUI;
+use super::base::WidgetBase;
 use utils::size::Size;
 use utils::vec2i::Vec2i;
 use utils::shared::{Shared, WeakShared};
@@ -11,14 +12,9 @@ use gui::themes::theme::Theme;
 
 /// A GUI widget
 pub trait Widget: InputResponder {
-	fn bounds(&self) -> &WidgetBounds;
+	fn base(&self) -> &WidgetBase;
 	
-	fn set_gui(&mut self, gui: WeakShared<WidgetGUI>);
-	
-	/// This method should ONLY be called inside of
-	/// Layout managers OR when no layout is used at all.
-	/// Otherwise conflicts may occur.
-	fn set_bounds(&mut self, bounds: WidgetBounds);
+	fn base_mut(&mut self) -> &mut WidgetBase;
 	
 	fn render(&mut self, graphics: &mut Graphics, theme: &Theme);
 	
@@ -67,8 +63,6 @@ pub trait Widget: InputResponder {
 		self.needs_relayout()
 	}
 	
-	fn needs_relayout(&self) -> bool { false }
-	
 	fn childs(&self) -> Vec<Shared<Widget>> { Vec::new() }
 	
 	fn handle_mouse_down(&mut self, event: MouseClickEvent) -> bool { false }
@@ -82,6 +76,25 @@ pub trait Widget: InputResponder {
 	fn handle_key_down(&mut self, event: KeyEvent) -> bool { false }
 	
 	fn handle_key_up(&mut self, event: KeyEvent) -> bool { false }
+	
+	// Convenience methods
+	
+	fn needs_relayout(&self) -> bool { self.base().needs_relayout() }
+	
+	fn bounds(&self) -> &WidgetBounds { self.base().bounds() }
+	
+	fn gui(&self) -> WeakShared<WidgetGUI> { self.base().gui() }
+	
+	fn set_gui(&mut self, gui: WeakShared<WidgetGUI>) { self.base_mut().set_gui(gui) }
+	
+	fn this(&self) -> WeakShared<Widget> { self.base().this() }
+	
+	fn set_this(&mut self, this: WeakShared<Widget>) { self.base_mut().set_this(this) }
+	
+	/// This method should ONLY be called inside of
+	/// Layout managers OR when no layout is used at all.
+	/// Otherwise conflicts may occur.
+	fn set_bounds(&mut self, bounds: WidgetBounds) { self.base_mut().set_bounds(bounds) }
 }
 
 impl <W> InputResponder for W where W: Widget {

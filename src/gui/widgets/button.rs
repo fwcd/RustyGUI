@@ -23,7 +23,7 @@ impl Button {
 			label: label,
 			active: false
 		};
-		instance.label.move_by(instance.base.padding);
+		instance.label.move_by(instance.base.padding());
 		instance
 	}
 	
@@ -41,26 +41,24 @@ impl Widget for Button {
 		}
 		
 		graphics.set_color(color);
-		graphics.draw_rect(self.base.bounds.rect(), ShapeDrawParams::fill());
+		graphics.draw_rect(self.base.bounds().rect(), ShapeDrawParams::fill());
 		self.label.render(graphics, theme);
 	}
 	
 	fn preferred_size(&self, graphics: &Graphics) -> Size {
-		self.label.preferred_size(graphics) + (self.base.padding * 2)
+		self.label.preferred_size(graphics) + (self.base.padding() * 2)
 	}
 	
-	fn bounds(&self) -> &WidgetBounds { &self.base.bounds }
-	
 	fn set_bounds(&mut self, bounds: WidgetBounds) {
-		let delta = self.base.bounds.offset_to(&bounds);
+		let delta = self.base.bounds().offset_to(&bounds);
 		self.label.move_by(delta);
-		self.base.bounds = bounds;
+		self.base.set_bounds(bounds);
 	}
 	
 	fn handle_mouse_down(&mut self, event: MouseClickEvent) -> bool {
 		trace!("Clicked a button");
 		self.label.set_text("Clicked!");
-		self.base.needs_relayout = true;
+		self.base.set_needs_relayout(true);
 		self.active = true;
 		true
 	}
@@ -70,7 +68,7 @@ impl Widget for Button {
 		true
 	}
 	
-	fn needs_relayout(&self) -> bool { self.base.needs_relayout }
+	fn base(&self) -> &WidgetBase { &self.base }
 	
-	fn set_gui(&mut self, gui: WeakShared<WidgetGUI>) { self.base.gui = gui }
+	fn base_mut(&mut self) -> &mut WidgetBase { &mut self.base }
 }

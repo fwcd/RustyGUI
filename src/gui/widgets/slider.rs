@@ -1,8 +1,5 @@
 use super::widget::Widget;
-use super::bounds::WidgetBounds;
 use super::base::WidgetBase;
-use super::gui::WidgetGUI;
-use utils::shared::WeakShared;
 use utils::size::Size;
 use gui::core::mouse::MouseClickEvent;
 use gui::core::graphics::Graphics;
@@ -33,21 +30,17 @@ impl Widget for Slider {
 		graphics.set_color(theme.bg().translucent());
 		graphics.draw_rect(self.bounds().rect(), ShapeDrawParams::fill());
 		graphics.set_color(theme.bg().strong());
-		graphics.draw_rect(self.base.bounds.rect().shrink_centered_by(self.preferred_size.height as i32 / 4), ShapeDrawParams::fill());
+		graphics.draw_rect(self.base.bounds().rect().shrink_centered_by(self.preferred_size.height as i32 / 4), ShapeDrawParams::fill());
 	}
 	
-	fn preferred_size(&self, graphics: &Graphics) -> Size { self.preferred_size }
-	
-	fn bounds(&self) -> &WidgetBounds { &self.base.bounds }
-	
-	fn set_bounds(&mut self, bounds: WidgetBounds) { self.base.bounds = bounds }
+	fn preferred_size(&self, _graphics: &Graphics) -> Size { self.preferred_size }
 	
 	fn handle_mouse_down(&mut self, event: MouseClickEvent) -> bool {
-		self.base.needs_relayout = true;
+		self.base.set_needs_relayout(true);
 		true
 	}
 	
-	fn needs_relayout(&self) -> bool { self.base.needs_relayout }
+	fn base(&self) -> &WidgetBase { &self.base }
 	
-	fn set_gui(&mut self, gui: WeakShared<WidgetGUI>) { self.base.gui = gui }
+	fn base_mut(&mut self) -> &mut WidgetBase { &mut self.base }
 }

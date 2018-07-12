@@ -9,5 +9,4 @@ pub mod empty;
 pub mod container;
 pub mod layouted_widget;
 pub mod gui;
-
-mod base;
+pub mod base;

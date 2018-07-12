@@ -4,13 +4,12 @@ use super::base::WidgetBase;
 use super::layouts::layout::Layout;
 use super::layouts::box_layout::BoxLayout;
 use super::layouted_widget::LayoutedWidget;
-use super::gui::WidgetGUI;
 use gui::core::graphics::Graphics;
 use gui::core::draw_params::ShapeDrawParams;
 use gui::themes::theme::Theme;
 use utils::reduce::Reduce;
 use utils::size::Size;
-use utils::shared::{Shared, WeakShared};
+use utils::shared::Shared;
 use utils::vec2i::Vec2i;
 
 pub struct Container {
@@ -51,8 +50,8 @@ impl Container {
 	}
 	
 	pub fn insert_with_id(&mut self, child: Shared<Widget>, layout_hint: &str, id: i32) {
+		child.borrow_mut().set_gui(self.base.gui().clone());
 		let widget = LayoutedWidget::of(child, layout_hint, id);
-		
 		self.childs.push(widget);
 	}
 	
@@ -89,7 +88,7 @@ impl Container {
 	
 	fn actual_padding(&self) -> Vec2i {
 		if self.layout.uses_parent_padding() {
-			self.base.padding
+			self.base.padding()
 		} else { Vec2i::of(0, 0) }
 	}
 }
@@ -112,7 +111,7 @@ impl Widget for Container {
 		self.preferred_size_override.unwrap_or_else(|| self.compute_preferred_size(graphics))
 	}
 	
-	fn bounds(&self) -> &WidgetBounds { &self.base.bounds }
+	fn bounds(&self) -> &WidgetBounds { &self.base.bounds() }
 	
 	fn set_bounds(&mut self, bounds: WidgetBounds) {
 		let delta = self.bounds().offset_to(&bounds);
@@ -121,7 +120,7 @@ impl Widget for Container {
 			child.borrow_mut().move_by(delta);
 		}
 		
-		self.base.bounds = bounds;
+		self.base.set_bounds(bounds);
 	}
 	
 	fn update_layout(&mut self, graphics: &Graphics) {
@@ -132,14 +131,14 @@ impl Widget for Container {
 		let bounds = self.preferred_bounds(graphics);
 		self.layout.arrange(&mut self.childs, &bounds, graphics);
 		
-		self.base.needs_relayout = false;
+		self.base.set_needs_relayout(false);
 	}
 	
 	fn childs(&self) -> Vec<Shared<Widget>> {
 		self.childs.iter().map(|it| it.widget()).collect::<Vec<Shared<Widget>>>()
 	}
 	
-	fn needs_relayout(&self) -> bool { self.base.needs_relayout }
+	fn base(&self) -> &WidgetBase { &self.base }
 	
-	fn set_gui(&mut self, gui: WeakShared<WidgetGUI>) { self.base.gui = gui }
+	fn base_mut(&mut self) -> &mut WidgetBase { &mut self.base }
 }

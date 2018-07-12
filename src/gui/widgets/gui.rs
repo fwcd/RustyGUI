@@ -15,7 +15,8 @@ use super::container::Container;
 pub struct WidgetGUI {
 	theme: Theme,
 	root: Container,
-	this: WeakShared<WidgetGUI>
+	this: WeakShared<WidgetGUI>,
+	dragged: Option<WeakShared<Widget>>
 }
 
 impl WidgetGUI {
@@ -27,7 +28,8 @@ impl WidgetGUI {
 		let instance = share(WidgetGUI {
 			theme: Theme::light(),
 			root: root,
-			this: WeakShared::new()
+			this: WeakShared::new(),
+			dragged: None
 		});
 		{
 			let mut instance_ref = instance.borrow_mut();
