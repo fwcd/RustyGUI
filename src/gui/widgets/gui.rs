@@ -55,6 +55,10 @@ impl WidgetGUI {
 	
 	pub fn set_theme(&mut self, theme: Theme) { self.theme = theme }
 	
+	pub fn dragged(&self) -> Option<WeakShared<Widget>> { self.dragged.as_ref().map(|it| it.clone()) }
+	
+	pub fn set_dragged(&mut self, dragged: WeakShared<Widget>) { self.dragged = Some(dragged) }
+	
 	pub fn render(&mut self, graphics: &mut Graphics) {
 		graphics.set_color(self.theme.bg().strong());
 		graphics.clear();
@@ -72,6 +76,16 @@ impl InputResponder for WidgetGUI {
 	}
 	
 	fn on_mouse_up(&mut self, event: MouseClickEvent) -> bool {
+		if let Some(weak_dragged) = self.dragged() {
+			// Only call mouseDrag event on the dragged widget when present
+			if let Some(dragged) = weak_dragged.upgrade() {
+				dragged.borrow_mut().on_mouse_up(self, event);
+			} else {
+				debug!("Warning: Dragged widget is present in GUI, but it's weak pointer does not point anywhere.");
+			}
+		self.dragged = None;
+		}
+		
 		let root = self.root.clone();
 		let mut root_ref = root.borrow_mut();
 		root_ref.on_mouse_up(self, event)
@@ -84,6 +98,15 @@ impl InputResponder for WidgetGUI {
 	}
 	
 	fn on_mouse_drag(&mut self, event: MouseDragEvent) -> bool {
+		if let Some(weak_dragged) = self.dragged() {
+			// Only call mouseDrag event on the dragged widget when present
+			if let Some(dragged) = weak_dragged.upgrade() {
+				dragged.borrow_mut().on_mouse_drag(self, event);
+			} else {
+				debug!("Warning: Dragged widget is present in GUI, but it's weak pointer does not point anywhere.");
+			}
+		}
+		
 		let root = self.root.clone();
 		let mut root_ref = root.borrow_mut();
 		root_ref.on_mouse_drag(self, event)

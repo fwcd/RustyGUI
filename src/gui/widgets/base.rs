@@ -43,7 +43,7 @@ impl WidgetBase {
 	
 	pub fn set_gui(&mut self, gui: WeakShared<WidgetGUI>) { self.gui = gui }
 	
-	pub fn this(&self) -> WeakShared<Widget> { self.this.as_ref().expect("Tried to fetch a non-present 'this' reference (a weak widget smart pointer) from a WidgetBase").clone() }
+	pub fn this(&self) -> Option<WeakShared<Widget>> { self.this.as_ref().map(|it| it.clone()) }
 	
 	pub fn set_this(&mut self, this: WeakShared<Widget>) { self.this = Some(this) }
 }

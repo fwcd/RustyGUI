@@ -11,6 +11,7 @@ use utils::reduce::Reduce;
 use utils::size::Size;
 use utils::shared::Shared;
 use utils::vec2i::Vec2i;
+use std::rc::Rc;
 
 pub struct Container {
 	base: WidgetBase,
@@ -50,7 +51,11 @@ impl Container {
 	}
 	
 	pub fn insert_with_id(&mut self, child: Shared<Widget>, layout_hint: &str, id: i32) {
-		child.borrow_mut().set_gui(self.base.gui().clone());
+		{
+			let mut child_ref = child.borrow_mut();
+			child_ref.set_this(Rc::downgrade(&child));
+			child_ref.set_gui(self.base.gui().clone());
+		}
 		let widget = LayoutedWidget::of(child, layout_hint, id);
 		self.childs.push(widget);
 	}

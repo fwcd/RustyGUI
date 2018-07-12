@@ -87,7 +87,7 @@ pub trait Widget: GUIInputResponder {
 	
 	fn set_gui(&mut self, gui: WeakShared<WidgetGUI>) { self.base_mut().set_gui(gui) }
 	
-	fn this(&self) -> WeakShared<Widget> { self.base().this() }
+	fn this(&self) -> Option<WeakShared<Widget>> { self.base().this() }
 	
 	fn set_this(&mut self, this: WeakShared<Widget>) { self.base_mut().set_this(this) }
 	
@@ -104,7 +104,15 @@ impl <W> GUIInputResponder for W where W: Widget {
 			let contains_pos = borrowed_child.bounds().rect().contains(event.pos);
 			if contains_pos && borrowed_child.on_mouse_down(gui, event) { return true; }
 		}
-		self.handle_mouse_down(event)
+		let handled = self.handle_mouse_down(event);
+		if handled {
+			if let Some(this) = self.this() {
+				gui.set_dragged(this);
+			} else {
+				debug!("Warning: The widget that handled the mouseDown event did not have a 'this' pointer, thus no drag lock could be set");
+			}
+		}
+		handled
 	}
 	
 	fn on_mouse_up(&mut self, gui: &mut WidgetGUI, event: MouseClickEvent) -> bool {
