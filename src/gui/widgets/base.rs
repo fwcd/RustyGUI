@@ -1,10 +1,13 @@
 use super::bounds::WidgetBounds;
+use super::gui::WidgetGUI;
+use utils::shared::WeakShared;
 use utils::vec2i::Vec2i;
 
 pub struct WidgetBase {
 	pub bounds: WidgetBounds,
 	pub padding: Vec2i,
-	pub needs_relayout: bool
+	pub needs_relayout: bool,
+	pub gui: WeakShared<WidgetGUI>
 }
 
 impl WidgetBase {
@@ -16,7 +19,8 @@ impl WidgetBase {
 		WidgetBase {
 			bounds: bounds,
 			padding: Vec2i::of(10, 10),
-			needs_relayout: true
+			needs_relayout: true,
+			gui: WeakShared::new()
 		}
 	}
 }

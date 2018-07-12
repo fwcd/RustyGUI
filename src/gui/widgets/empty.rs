@@ -1,6 +1,8 @@
 use super::widget::Widget;
 use super::bounds::WidgetBounds;
 use super::base::WidgetBase;
+use super::gui::WidgetGUI;
+use utils::shared::WeakShared;
 use utils::size::Size;
 use gui::core::graphics::Graphics;
 use gui::themes::theme::Theme;
@@ -21,4 +23,6 @@ impl Widget for EmptyWidget {
 	fn bounds(&self) -> &WidgetBounds { &self.base.bounds }
 	
 	fn set_bounds(&mut self, bounds: WidgetBounds) { self.base.bounds = bounds }
+	
+	fn set_gui(&mut self, gui: WeakShared<WidgetGUI>) { self.base.gui = gui }
 }

@@ -1,7 +1,8 @@
 use super::bounds::WidgetBounds;
+use super::gui::WidgetGUI;
 use utils::size::Size;
 use utils::vec2i::Vec2i;
-use utils::shared::Shared;
+use utils::shared::{Shared, WeakShared};
 use gui::core::graphics::Graphics;
 use gui::core::input_responder::InputResponder;
 use gui::core::mouse::{MouseClickEvent, MouseDragEvent, MouseMoveEvent};
@@ -11,6 +12,8 @@ use gui::themes::theme::Theme;
 /// A GUI widget
 pub trait Widget: InputResponder {
 	fn bounds(&self) -> &WidgetBounds;
+	
+	fn set_gui(&mut self, gui: WeakShared<WidgetGUI>);
 	
 	/// This method should ONLY be called inside of
 	/// Layout managers OR when no layout is used at all.

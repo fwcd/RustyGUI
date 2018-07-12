@@ -4,8 +4,6 @@ use utils::rect::Rectangle as APIRect;
 use super::color::Color as APIColor;
 use super::draw_params::ShapeDrawParams;
 use super::font_params::FontParams;
-use super::api_bridge::{sdl2_color_of, sdl2_rect_of};
-use std::path::Path;
 
 pub trait Graphics {
 	fn clear(&mut self);

@@ -1,6 +1,8 @@
 use super::widget::Widget;
 use super::bounds::WidgetBounds;
 use super::base::WidgetBase;
+use super::gui::WidgetGUI;
+use utils::shared::WeakShared;
 use utils::size::Size;
 use gui::core::mouse::MouseClickEvent;
 use gui::core::graphics::Graphics;
@@ -46,4 +48,6 @@ impl Widget for Slider {
 	}
 	
 	fn needs_relayout(&self) -> bool { self.base.needs_relayout }
+	
+	fn set_gui(&mut self, gui: WeakShared<WidgetGUI>) { self.base.gui = gui }
 }

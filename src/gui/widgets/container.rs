@@ -4,13 +4,13 @@ use super::base::WidgetBase;
 use super::layouts::layout::Layout;
 use super::layouts::box_layout::BoxLayout;
 use super::layouted_widget::LayoutedWidget;
+use super::gui::WidgetGUI;
 use gui::core::graphics::Graphics;
 use gui::core::draw_params::ShapeDrawParams;
 use gui::themes::theme::Theme;
 use utils::reduce::Reduce;
 use utils::size::Size;
-use utils::shared::Shared;
-use utils::rect::Rectangle;
+use utils::shared::{Shared, WeakShared};
 use utils::vec2i::Vec2i;
 
 pub struct Container {
@@ -140,4 +140,6 @@ impl Widget for Container {
 	}
 	
 	fn needs_relayout(&self) -> bool { self.base.needs_relayout }
+	
+	fn set_gui(&mut self, gui: WeakShared<WidgetGUI>) { self.base.gui = gui }
 }

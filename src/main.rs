@@ -31,9 +31,11 @@ fn main() {
 	info!("Initializing application...");
 	
 	let mut app = WidgetGUIApp::new(title, width, height, Box::new(layout));
-	app.set_theme(Theme::dark());
 	{
-		let root = app.root();
+		let mut gui = app.borrow_gui_mut();
+		gui.set_theme(Theme::dark());
+		
+		let root = gui.root();
 		root.add(share(Button::labelled("Test", 32)));
 		root.add(share(Label::of("Demo", 15)));
 		root.add(share(Slider::new(0.0..=10.0)));
