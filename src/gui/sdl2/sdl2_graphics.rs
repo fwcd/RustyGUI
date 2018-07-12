@@ -2,6 +2,7 @@ use sdl2::video::{Window, WindowContext};
 use sdl2::render::{Canvas, TextureCreator, Texture, TextureQuery, BlendMode};
 use sdl2::ttf;
 use sdl2::ttf::{Font, Sdl2TtfContext};
+use sdl2::gfx::primitives::DrawRenderer;
 use sdl2::rect::Rect as SDL2Rect;
 use sdl2::pixels::Color as SDL2Color;
 use utils::size::Size;
@@ -94,8 +95,14 @@ impl <'g> Graphics for SDL2Graphics<'g> {
 		Self::texture_size(&texture)
 	}
 	
-	fn draw_oval_in(&mut self, rectangle: APIRect, params: ShapeDrawParams) {
-		// TODO
+	fn draw_oval(&mut self, center: Vec2i, radius_x: u32, radius_y: u32, params: ShapeDrawParams) {
+		let (x, y, rx, ry, c) = (center.x as i16, center.y as i16, radius_x as i16, radius_y as i16, self.canvas.draw_color());
+		if params.filled() {
+			self.canvas.filled_ellipse(x, y, rx, ry, c);
+		}
+		if params.outlined() {
+			self.canvas.ellipse(x, y, rx, ry, c);
+		}
 	}
 	
 	fn draw_string(&mut self, text: &str, pos: Vec2i, params: FontParams) {

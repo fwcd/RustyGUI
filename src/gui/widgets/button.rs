@@ -13,7 +13,8 @@ use gui::themes::theme::Theme;
 pub struct Button {
 	base: WidgetBase,
 	label: Label,
-	active: bool
+	active: bool,
+	is_round: bool
 }
 
 impl Button {
@@ -21,11 +22,16 @@ impl Button {
 		let mut instance = Button {
 			base: WidgetBase::empty(),
 			label: label,
-			active: false
+			active: false,
+			is_round: false
 		};
 		instance.label.move_by(instance.base.padding());
 		instance
 	}
+	
+	pub fn is_round(&self) -> bool { self.is_round }
+	
+	pub fn set_round(&mut self, is_round: bool) { self.is_round = is_round }
 	
 	pub fn labelled(text: &str, font_size: u16) -> Button {
 		Button::new(Label::of(text, font_size))
@@ -40,8 +46,15 @@ impl Widget for Button {
 			color = color.with_half_alpha();
 		}
 		
+		let bounds = self.base.bounds().rect();
+		let params = ShapeDrawParams::fill();
+		
 		graphics.set_color(color);
-		graphics.draw_rect(self.base.bounds().rect(), ShapeDrawParams::fill());
+		if self.is_round {
+			graphics.draw_oval_in(bounds, params);
+		} else {
+			graphics.draw_rect(bounds, params);
+		}
 		self.label.render(graphics, theme);
 	}
 	

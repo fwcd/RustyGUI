@@ -14,7 +14,11 @@ pub trait Graphics {
 	
 	fn string_size(&self, text: &str, params: FontParams) -> Size;
 	
-	fn draw_oval_in(&mut self, rectangle: APIRect, params: ShapeDrawParams);
+	fn draw_oval(&mut self, center: Vec2i, radius_x: u32, radius_y: u32, params: ShapeDrawParams);
 	
 	fn draw_string(&mut self, text: &str, pos: Vec2i, params: FontParams);
+	
+	fn draw_oval_in(&mut self, rectangle: APIRect, params: ShapeDrawParams) {
+		self.draw_oval(rectangle.center(), rectangle.width() / 2, rectangle.height() / 2, params)
+	}
 }

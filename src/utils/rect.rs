@@ -50,6 +50,8 @@ impl Rectangle {
 		Rectangle::of(self.top_left + delta, self.size)
 	}
 	
+	pub fn center(&self) -> Vec2i { self.top_left + (self.size / 2).to_vec() } 
+	
 	pub fn top_left(&self) -> Vec2i { self.top_left }
 	
 	pub fn bottom_right(&self) -> Vec2i { self.top_left + self.size.to_vec() }

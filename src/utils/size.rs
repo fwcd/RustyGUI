@@ -1,5 +1,5 @@
 use super::vec2i::Vec2i;
-use std::ops::Add;
+use std::ops::{Add, Mul, Div};
 
 #[derive(Debug, Copy, Clone)]
 pub struct Size {
@@ -30,4 +30,14 @@ impl Add<Vec2i> for Size {
 			((self.height as i32) + rhs.y) as u32
 		)
 	}
+}
+
+impl Mul<u32> for Size {
+	type Output = Size;
+	fn mul(self, rhs: u32) -> Size { Size::of(self.width * rhs, self.height * rhs) }
+}
+
+impl Div<u32> for Size {
+	type Output = Size;
+	fn div(self, rhs: u32) -> Size { Size::of(self.width / rhs, self.height / rhs) }
 }
