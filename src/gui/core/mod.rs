@@ -6,5 +6,4 @@ pub mod keyboard;
 pub mod draw_params;
 pub mod font_params;
 pub mod color;
-pub mod mainloop;
 pub mod input_responder;

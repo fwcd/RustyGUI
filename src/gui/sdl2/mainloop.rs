@@ -5,11 +5,11 @@ use sdl2::event::Event;
 use sdl2::init;
 use sdl2::ttf;
 use utils::vec2i::Vec2i;
-use gui::core::graphics::Graphics;
 use gui::core::gui_application::GUIApplication;
 use gui::core::mouse::{MouseClickEvent, MouseDragEvent, MouseMoveEvent};
 use gui::core::mouse::MouseButton as APIMouseButton;
 use gui::core::api_bridge::{api_mouse_button_of};
+use super::sdl2_graphics::SDL2Graphics;
 
 pub fn run_gui_app(app: &mut GUIApplication) {
 	// Initialize SDL2
@@ -23,7 +23,7 @@ pub fn run_gui_app(app: &mut GUIApplication) {
 	// Create a window and a canvas
 	let window = video.window(app.title().as_str(), app.width(), app.height()).position_centered().build().expect("Error while creating window");
 	let canvas = window.into_canvas().build().expect("Error while creating canvas");
-	let mut graphics = Graphics::from(canvas, ttf, font_path);
+	let mut graphics = SDL2Graphics::from(canvas, ttf, font_path);
 	
 	// Initialize event loop
 	let mut event_pump = context.event_pump().expect("Error while fetching event pump");
@@ -70,7 +70,7 @@ pub fn run_gui_app(app: &mut GUIApplication) {
 		}
 		
 		app.render(&mut graphics);
-		graphics.internal_show();
+		graphics.show();
 		thread::sleep(sleep_per_iteration);
 	}
 }

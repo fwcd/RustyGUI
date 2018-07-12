@@ -17,7 +17,7 @@ use gui::widgets::button::Button;
 use gui::widgets::label::Label;
 use gui::widgets::slider::Slider;
 use gui::widgets::container::Container;
-use gui::core::mainloop::run_gui_app;
+use gui::sdl2::mainloop::run_gui_app;
 use utils::shared::share;
 
 fn main() {
