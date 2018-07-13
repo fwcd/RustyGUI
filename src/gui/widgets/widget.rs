@@ -9,6 +9,7 @@ use gui::core::graphics::Graphics;
 use gui::core::mouse::{MouseClickEvent, MouseDragEvent, MouseMoveEvent};
 use gui::core::keyboard::KeyEvent;
 use gui::themes::theme::Theme;
+use std::cell::RefMut;
 
 /// A GUI widget
 pub trait Widget: GUIInputResponder {
@@ -19,6 +20,8 @@ pub trait Widget: GUIInputResponder {
 	fn render(&mut self, graphics: &mut Graphics, theme: &Theme);
 	
 	fn preferred_size(&self, graphics: &Graphics) -> Size;
+	
+	fn name(&self) -> &str;
 	
 	fn preferred_bounds(&self, graphics: &Graphics) -> WidgetBounds {
 		WidgetBounds::from(self.top_left(), self.preferred_size(graphics))
@@ -33,7 +36,7 @@ pub trait Widget: GUIInputResponder {
 	/// Otherwise conflicts may occur.
 	fn move_by(&mut self, delta: Vec2i) {
 		let new_bounding_rect = self.bounds().rect().moved_by(delta);
-		self.set_bounds(WidgetBounds::of(new_bounding_rect));
+		self.set_bounds_deeply(WidgetBounds::of(new_bounding_rect));
 	}
 	
 	/// This method should ONLY be called inside of
@@ -44,27 +47,35 @@ pub trait Widget: GUIInputResponder {
 		self.move_by(delta);
 	}
 	
+	fn update_layout_deeply(&mut self, graphics: &Graphics) {
+		self.update_layout(graphics);
+		self.for_each_child(&mut |mut it|
+			it.update_layout_if_needed(graphics)
+		);
+	}
+	
 	fn update_layout(&mut self, graphics: &Graphics) {
 		let top_left = self.top_left();
 		let size = self.preferred_size(graphics);
-		self.set_bounds(WidgetBounds::from(top_left, size));
+		self.set_bounds_deeply(WidgetBounds::from(top_left, size));
+		self.base_mut().set_needs_relayout(false);
 	}
 	
 	fn update_layout_if_needed(&mut self, graphics: &Graphics) {
 		if self.or_any_child_needs_relayout() {
-			self.update_layout(graphics);
+			self.update_layout_deeply(graphics);
 		}
 	}
 	
-	fn or_any_child_needs_relayout(&self) -> bool {
-		let needs_relayout = false;
-		self.for_each_child(&mut |it|
-			if it.or_any_child_needs_relayout() { needs_relayout = true; }
+	fn or_any_child_needs_relayout(&mut self) -> bool {
+		let mut child_needs_relayout = false;
+		self.for_each_child(&mut |mut it|
+			child_needs_relayout |= it.or_any_child_needs_relayout()
 		);
-		self.needs_relayout()
+		child_needs_relayout || self.needs_relayout()
 	}
 	
-	fn for_each_child(&mut self, each: &mut FnMut(&mut Widget)) {}
+	fn for_each_child(&mut self, each: &mut FnMut(RefMut<Widget>)) {}
 	
 	fn handle_mouse_down(&mut self, event: MouseClickEvent) -> bool { false }
 	
@@ -77,6 +88,18 @@ pub trait Widget: GUIInputResponder {
 	fn handle_key_down(&mut self, event: KeyEvent) -> bool { false }
 	
 	fn handle_key_up(&mut self, event: KeyEvent) -> bool { false }
+	
+	/// This method should ONLY be called inside of
+	/// Layout managers OR when no layout is used at all.
+	/// Otherwise conflicts may occur.
+	fn set_bounds_deeply(&mut self, bounds: WidgetBounds) {
+		trace!("{} sets bounds deeply", self.name());
+		let delta = self.bounds().offset_to(&bounds);
+		self.for_each_child(&mut |mut it|
+			it.move_by(delta)
+		);
+		self.base_mut().set_bounds(bounds);
+	}
 	
 	// Convenience methods
 	
@@ -91,19 +114,14 @@ pub trait Widget: GUIInputResponder {
 	fn this(&self) -> Option<WeakShared<Widget>> { self.base().this() }
 	
 	fn set_this(&mut self, this: WeakShared<Widget>) { self.base_mut().set_this(this) }
-	
-	/// This method should ONLY be called inside of
-	/// Layout managers OR when no layout is used at all.
-	/// Otherwise conflicts may occur.
-	fn set_bounds(&mut self, bounds: WidgetBounds) { self.base_mut().set_bounds(bounds) }
 }
 
 impl <W> GUIInputResponder for W where W: Widget {
 	fn on_mouse_down(&mut self, gui: &mut WidgetGUI, event: MouseClickEvent) -> bool {
 		let mut handled = false;
-		self.for_each_child(&mut |it| {
+		self.for_each_child(&mut |mut it| {
 			let contains_pos = it.bounds().rect().contains(event.pos);
-			if contains_pos && it.on_mouse_down(gui, event) { handled = true; }
+			if contains_pos { handled |= it.on_mouse_down(gui, event); }
 		});
 		if handled { return true; }
 		handled = self.handle_mouse_down(event);
@@ -119,9 +137,9 @@ impl <W> GUIInputResponder for W where W: Widget {
 	
 	fn on_mouse_up(&mut self, gui: &mut WidgetGUI, event: MouseClickEvent) -> bool {
 		let mut handled = false;
-		self.for_each_child(&mut |it| {
+		self.for_each_child(&mut |mut it| {
 			let contains_pos = it.bounds().rect().contains(event.pos);
-			if contains_pos && it.on_mouse_up(gui, event) { handled = true; }
+			if contains_pos { handled |= it.on_mouse_up(gui, event); }
 		});
 		if handled { return true; }
 		self.handle_mouse_up(event)
@@ -129,9 +147,9 @@ impl <W> GUIInputResponder for W where W: Widget {
 	
 	fn on_mouse_move(&mut self, gui: &mut WidgetGUI, event: MouseMoveEvent) -> bool {
 		let mut handled = false;
-		self.for_each_child(&mut |it| {
+		self.for_each_child(&mut |mut it| {
 			let contains_pos = it.bounds().rect().contains(event.pos);
-			if contains_pos && it.on_mouse_move(gui, event) { handled = true; }
+			if contains_pos { handled |= it.on_mouse_move(gui, event); }
 		});
 		if handled { return true; }
 		self.handle_mouse_move(event)
@@ -139,9 +157,9 @@ impl <W> GUIInputResponder for W where W: Widget {
 	
 	fn on_mouse_drag(&mut self, gui: &mut WidgetGUI, event: MouseDragEvent) -> bool {
 		let mut handled = false;
-		self.for_each_child(&mut |it| {
+		self.for_each_child(&mut |mut it| {
 			let contains_pos = it.bounds().rect().contains(event.pos);
-			if contains_pos && it.on_mouse_drag(gui, event) { handled = true; }
+			if contains_pos { handled |= it.on_mouse_drag(gui, event); }
 		});
 		if handled { return true; }
 		self.handle_mouse_drag(event)
@@ -151,8 +169,8 @@ impl <W> GUIInputResponder for W where W: Widget {
 	
 	fn on_key_down(&mut self, gui: &mut WidgetGUI, event: KeyEvent) -> bool {
 		let mut handled = false;
-		self.for_each_child(&mut |it| {
-			if it.on_key_down(gui, event) { handled = true; }
+		self.for_each_child(&mut |mut it| {
+			handled |= it.on_key_down(gui, event);
 		});
 		if handled { return true; }
 		self.handle_key_down(event)
@@ -160,8 +178,8 @@ impl <W> GUIInputResponder for W where W: Widget {
 	
 	fn on_key_up(&mut self, gui: &mut WidgetGUI, event: KeyEvent) -> bool {
 		let mut handled = false;
-		self.for_each_child(&mut |it| {
-			if it.on_key_up(gui, event) { handled = true; }
+		self.for_each_child(&mut |mut it| {
+			handled |= it.on_key_up(gui, event);
 		});
 		if handled { return true; }
 		self.handle_key_up(event)

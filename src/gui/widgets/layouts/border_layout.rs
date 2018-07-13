@@ -65,11 +65,11 @@ impl Layout for BorderLayout {
 		let bottom_bounds = WidgetBounds::new(top_left.x, bottom_right.y - bottom_height as i32, max_width, bottom_height);
 		let center_bounds = WidgetBounds::new(top_left.x + left_width as i32, top_left.y + top_height as i32, center_width, side_height);
 		
-		if let Some(top_widget) = top.as_mut() { top_widget.set_bounds(top_bounds); }
-		if let Some(left_widget) = left.as_mut() { left_widget.set_bounds(left_bounds); }
-		if let Some(right_widget) = right.as_mut() { right_widget.set_bounds(right_bounds); }
-		if let Some(bottom_widget) = bottom.as_mut() { bottom_widget.set_bounds(bottom_bounds); }
-		if let Some(center_widget) = center.as_mut() { center_widget.set_bounds(center_bounds); }
+		if let Some(top_widget) = top.as_mut() { top_widget.set_bounds_deeply(top_bounds); }
+		if let Some(left_widget) = left.as_mut() { left_widget.set_bounds_deeply(left_bounds); }
+		if let Some(right_widget) = right.as_mut() { right_widget.set_bounds_deeply(right_bounds); }
+		if let Some(bottom_widget) = bottom.as_mut() { bottom_widget.set_bounds_deeply(bottom_bounds); }
+		if let Some(center_widget) = center.as_mut() { center_widget.set_bounds_deeply(center_bounds); }
 	}
 	
 	fn uses_parent_padding(&self) -> bool { false }

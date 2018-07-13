@@ -5,13 +5,14 @@ use utils::cast::Castable;
 use utils::size::Size;
 use utils::rect::Rectangle;
 use utils::vec2i::Vec2i;
-use utils::shared::{share, Shared};
+use utils::shared::{share, Shared, shared_to_mut};
 use gui::core::mouse::MouseClickEvent;
 use gui::core::graphics::Graphics;
 use gui::core::draw_params::ShapeDrawParams;
 use gui::themes::theme::Theme;
 use std::ops::RangeInclusive;
-use std::rc::Rc;
+use std::cell::RefMut;
+use std::f32;
 
 pub struct Slider {
 	// view
@@ -20,6 +21,7 @@ pub struct Slider {
 	thumb: Shared<SliderThumb>,
 	// model
 	range: RangeInclusive<f32>,
+	old_value: f32,
 	value: f32
 }
 
@@ -31,6 +33,7 @@ impl Slider {
 			preferred_size: Size::of(200, 30),
 			thumb: share(SliderThumb::of_radius(10)),
 			range: range,
+			old_value: f32::INFINITY,
 			value: value
 		}
 	}
@@ -60,17 +63,17 @@ impl Widget for Slider {
 		
 		// Draw thumb
 		let mut thumb = self.thumb.borrow_mut();
-		let thumb_offset = Vec2i::of(self.base.padding().x, bounds.height() as i32 / 2);
-		let thumb_center = self.top_left() + thumb_offset;
 		
-		thumb.set_center(thumb_center);
+		if self.old_value != self.value {
+			// Thumb needs an update
+			let thumb_offset = Vec2i::of(self.base.padding().x, bounds.height() as i32 / 2);
+			let thumb_center = self.top_left() + thumb_offset;
+			
+			thumb.set_center(thumb_center);
+			self.old_value = self.value;
+		}
+		
 		thumb.render(graphics, theme);
-	}
-	
-	fn set_bounds(&mut self, bounds: WidgetBounds) {
-		let delta = self.base.bounds().offset_to(&bounds);
-		self.thumb.borrow_mut().move_by(delta);
-		self.base.set_bounds(bounds);
 	}
 	
 	fn preferred_size(&self, _graphics: &Graphics) -> Size { self.preferred_size }
@@ -80,12 +83,14 @@ impl Widget for Slider {
 		true
 	}
 	
+	fn name(&self) -> &str { "Slider" }
+	
 	fn base(&self) -> &WidgetBase { &self.base }
 	
 	fn base_mut(&mut self) -> &mut WidgetBase { &mut self.base }
 	
-	fn for_each_child(&mut self, each: &mut FnMut(&mut Widget)) {
-		each(Rc::get_mut(&mut self.thumb).expect("Could not borrow slider thumb").get_mut());
+	fn for_each_child(&mut self, each: &mut FnMut(RefMut<Widget>)) {
+		each(self.thumb.borrow_mut());
 	}
 }
 
@@ -121,6 +126,8 @@ impl Widget for SliderThumb {
 		
 		graphics.draw_oval_in(self.bounds().rect(), ShapeDrawParams::fill(color));
 	}
+	
+	fn name(&self) -> &str { "SliderThumb" }
 	
 	fn preferred_size(&self, _graphics: &Graphics) -> Size {
 		let diameter = self.radius * 2;

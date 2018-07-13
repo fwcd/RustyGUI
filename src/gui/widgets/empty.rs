@@ -17,6 +17,8 @@ impl Widget for EmptyWidget {
 	
 	fn preferred_size(&self, graphics: &Graphics) -> Size { Size::of(0, 0) }
 	
+	fn name(&self) -> &str { "Empty" }
+	
 	fn base(&self) -> &WidgetBase { &self.base }
 	
 	fn base_mut(&mut self) -> &mut WidgetBase { &mut self.base }

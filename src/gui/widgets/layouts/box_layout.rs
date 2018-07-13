@@ -30,7 +30,7 @@ impl Layout for BoxLayout {
 		for boxed_widget in widgets {
 			let mut widget = boxed_widget.borrow_mut();
 			let size = widget.preferred_size(graphics);
-			widget.set_bounds(WidgetBounds::from(draw_pos, size));
+			widget.set_bounds_deeply(WidgetBounds::from(draw_pos, size));
 			
 			let delta: Vec2i;
 			

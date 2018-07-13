@@ -39,6 +39,8 @@ impl Widget for Label {
 		graphics.string_size(self.text.as_str(), self.font_params)
 	}
 	
+	fn name(&self) -> &str { "Label" }
+	
 	fn base(&self) -> &WidgetBase { &self.base }
 	
 	fn base_mut(&mut self) -> &mut WidgetBase { &mut self.base }

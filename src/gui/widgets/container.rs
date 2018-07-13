@@ -12,6 +12,7 @@ use utils::size::Size;
 use utils::shared::Shared;
 use utils::vec2i::Vec2i;
 use std::rc::Rc;
+use std::cell::RefMut;
 
 pub struct Container {
 	base: WidgetBase,
@@ -58,6 +59,7 @@ impl Container {
 		}
 		let widget = LayoutedWidget::of(child, layout_hint, id);
 		self.childs.push(widget);
+		self.base_mut().set_needs_relayout(true);
 	}
 	
 	pub fn remove_with_id(&mut self, id: i32) {
@@ -116,33 +118,24 @@ impl Widget for Container {
 		self.preferred_size_override.unwrap_or_else(|| self.compute_preferred_size(graphics))
 	}
 	
+	fn name(&self) -> &str { "Container" }
+	
 	fn bounds(&self) -> &WidgetBounds { &self.base.bounds() }
 	
-	fn set_bounds(&mut self, bounds: WidgetBounds) {
-		let delta = self.bounds().offset_to(&bounds);
-		
-		for child in &self.childs {
-			child.borrow_mut().move_by(delta);
-		}
-		
-		self.base.set_bounds(bounds);
-	}
-	
 	fn update_layout(&mut self, graphics: &Graphics) {
-		for child in &self.childs {
-			child.borrow_mut().update_layout_if_needed(graphics);
-		}
+		let top_left = self.top_left();
+		let size = self.preferred_size(graphics);
+		self.set_bounds_deeply(WidgetBounds::from(top_left, size));
+		self.base_mut().set_needs_relayout(false);
 		
 		let bounds = self.preferred_bounds(graphics);
 		self.layout.arrange(&mut self.childs, &bounds, graphics);
-		
-		self.base.set_needs_relayout(false);
 	}
 	
-	fn for_each_child(&mut self, each: &mut FnMut(&mut Widget)) {
+	fn for_each_child(&mut self, each: &mut FnMut(RefMut<Widget>)) {
 		for child in &self.childs {
 			let mut child_widget = child.widget();
-			each(child_widget.get_mut());
+			each(child_widget.borrow_mut());
 		}
 	}
 	

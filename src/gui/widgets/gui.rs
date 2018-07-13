@@ -18,7 +18,8 @@ pub struct WidgetGUI {
 	theme: Theme,
 	root: Shared<Container>,
 	this: WeakShared<WidgetGUI>,
-	dragged: Option<WeakShared<Widget>>
+	dragged: Option<WeakShared<Widget>>,
+	current_global_widget_id: u32
 }
 
 impl WidgetGUI {
@@ -26,7 +27,7 @@ impl WidgetGUI {
 		let root = share(Container::new(base_layout));
 		{
 			let mut root_ref = root.borrow_mut();
-			root_ref.set_bounds(WidgetBounds::new(0, 0, width, height));
+			root_ref.base_mut().set_bounds(WidgetBounds::new(0, 0, width, height));
 			root_ref.set_preferred_size(Size::of(width, height));
 			root_ref.set_has_background(false);
 		}
@@ -34,7 +35,8 @@ impl WidgetGUI {
 			theme: Theme::light(),
 			root: root,
 			this: WeakShared::new(),
-			dragged: None
+			dragged: None,
+			current_global_widget_id: 0
 		});
 		{
 			let mut instance_ref = instance.borrow_mut();
@@ -43,6 +45,12 @@ impl WidgetGUI {
 			instance_ref.this = this;
 		}
 		instance
+	}
+	
+	pub fn next_global_widget_id(&mut self) -> u32 {
+		let id = self.current_global_widget_id;
+		self.current_global_widget_id += 1;
+		id
 	}
 	
 	pub fn root(&self) -> Shared<Container> { self.root.clone() }

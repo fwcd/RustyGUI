@@ -3,16 +3,17 @@ use super::label::Label;
 use super::bounds::WidgetBounds;
 use super::base::WidgetBase;
 use super::gui::WidgetGUI;
-use utils::shared::WeakShared;
+use utils::shared::{Shared, WeakShared, share};
 use utils::size::Size;
 use gui::core::mouse::MouseClickEvent;
 use gui::core::graphics::Graphics;
 use gui::core::draw_params::ShapeDrawParams;
 use gui::themes::theme::Theme;
+use std::cell::RefMut;
 
 pub struct Button {
 	base: WidgetBase,
-	label: Label,
+	label: Shared<Label>,
 	active: bool,
 	is_round: bool
 }
@@ -21,11 +22,11 @@ impl Button {
 	pub fn new(label: Label) -> Button {
 		let mut instance = Button {
 			base: WidgetBase::empty(),
-			label: label,
+			label: share(label),
 			active: false,
 			is_round: false
 		};
-		instance.label.move_by(instance.base.padding());
+		instance.label.borrow_mut().move_by(instance.base.padding());
 		instance
 	}
 	
@@ -54,21 +55,17 @@ impl Widget for Button {
 		} else {
 			graphics.draw_rect(bounds, params);
 		}
-		self.label.render(graphics, theme);
+		self.label.borrow_mut().render(graphics, theme);
 	}
 	
 	fn preferred_size(&self, graphics: &Graphics) -> Size {
-		self.label.preferred_size(graphics) + (self.base.padding() * 2)
+		self.label.borrow().preferred_size(graphics) + (self.base.padding() * 2)
 	}
 	
-	fn set_bounds(&mut self, bounds: WidgetBounds) {
-		let delta = self.base.bounds().offset_to(&bounds);
-		self.label.move_by(delta);
-		self.base.set_bounds(bounds);
-	}
+	fn name(&self) -> &str { "Button" }
 	
 	fn handle_mouse_down(&mut self, event: MouseClickEvent) -> bool {
-		self.label.set_text("Clicked!");
+		self.label.borrow_mut().set_text("Clicked!");
 		self.base.set_needs_relayout(true);
 		self.active = true;
 		true
@@ -77,6 +74,10 @@ impl Widget for Button {
 	fn handle_mouse_up(&mut self, event: MouseClickEvent) -> bool {
 		self.active = false;
 		true
+	}
+	
+	fn for_each_child(&mut self, each: &mut FnMut(RefMut<Widget>)) {
+		each(self.label.borrow_mut());
 	}
 	
 	fn base(&self) -> &WidgetBase { &self.base }

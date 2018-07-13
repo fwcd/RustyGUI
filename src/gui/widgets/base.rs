@@ -41,7 +41,7 @@ impl WidgetBase {
 	
 	pub fn set_needs_relayout(&mut self, needs_relayout: bool) { self.needs_relayout = needs_relayout }
 	
-	pub fn set_gui(&mut self, gui: WeakShared<WidgetGUI>) { self.gui = gui }
+	pub fn set_gui(&mut self, gui: WeakShared<WidgetGUI>) { self.gui = gui; }
 	
 	pub fn this(&self) -> Option<WeakShared<Widget>> { self.this.as_ref().map(|it| it.clone()) }
 	
