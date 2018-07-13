@@ -1,9 +1,8 @@
 use super::widget::Widget;
 use super::base::WidgetBase;
 use super::bounds::WidgetBounds;
-use utils::cast::Castable;
+use super::widget_utils::widget_of;
 use utils::size::Size;
-use utils::rect::Rectangle;
 use utils::vec2i::Vec2i;
 use utils::shared::{share, Shared, shared_to_mut};
 use gui::core::mouse::MouseClickEvent;
@@ -31,7 +30,7 @@ impl Slider {
 		Self {
 			base: WidgetBase::empty(),
 			preferred_size: Size::of(200, 30),
-			thumb: share(SliderThumb::of_radius(10)),
+			thumb: widget_of(SliderThumb::of_radius(10)),
 			range: range,
 			old_value: f32::INFINITY,
 			value: value

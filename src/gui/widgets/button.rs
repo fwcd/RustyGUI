@@ -1,9 +1,8 @@
 use super::widget::Widget;
 use super::label::Label;
-use super::bounds::WidgetBounds;
+use super::widget_utils::widget_of;
 use super::base::WidgetBase;
-use super::gui::WidgetGUI;
-use utils::shared::{Shared, WeakShared, share};
+use utils::shared::Shared;
 use utils::size::Size;
 use gui::core::mouse::MouseClickEvent;
 use gui::core::graphics::Graphics;
@@ -22,7 +21,7 @@ impl Button {
 	pub fn new(label: Label) -> Button {
 		let mut instance = Button {
 			base: WidgetBase::empty(),
-			label: share(label),
+			label: widget_of(label),
 			active: false,
 			is_round: false
 		};

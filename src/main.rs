@@ -13,9 +13,9 @@ use gui::widgets::layouts::border_layout::{BorderLayout, TOP_POS, LEFT_POS, RIGH
 use gui::widgets::button::Button;
 use gui::widgets::label::Label;
 use gui::widgets::slider::Slider;
+use gui::widgets::widget_utils::widget_of;
 use gui::widgets::container::Container;
 use gui::sdl2::mainloop::run_gui_app;
-use utils::shared::share;
 
 fn main() {
 	simple_logger::init_with_level(log::Level::Trace).expect("Could not initialize logger");
@@ -33,28 +33,28 @@ fn main() {
 		gui.set_theme(Theme::dark());
 		
 		let mut root = gui.borrow_root_mut();
-		root.add(share(Button::labelled("Test", 32)));
-		root.add(share(Label::of("Demo", 15)));
-		root.add(share(Slider::new(0.0..=10.0)));
-		root.add(share({
+		root.add(widget_of(Button::labelled("Test", 32)));
+		root.add(widget_of(Label::of("Demo", 15)));
+		root.add(widget_of(Slider::new(0.0..=10.0)));
+		root.add(widget_of({
 			let mut container = Container::vbox();
-			container.add(share(Button::labelled("One", 12)));
-			container.add(share(Button::labelled("Two", 12)));
-			container.add(share({
+			container.add(widget_of(Button::labelled("One", 12)));
+			container.add(widget_of(Button::labelled("Two", 12)));
+			container.add(widget_of({
 				let mut nested = Container::new(Box::new(BorderLayout::new()));
-				nested.insert(share(Button::labelled("Nested button", 12)), TOP_POS);
-				nested.insert(share(Button::labelled("Just a large button", 12)), LEFT_POS);
-				nested.insert(share(Label::of("Label", 12)), RIGHT_POS);
+				nested.insert(widget_of(Button::labelled("Nested button", 12)), TOP_POS);
+				nested.insert(widget_of(Button::labelled("Just a large button", 12)), LEFT_POS);
+				nested.insert(widget_of(Label::of("Label", 12)), RIGHT_POS);
 				nested
 			}));
-			container.add(share({
+			container.add(widget_of({
 				let mut nested = Container::hbox();
-				nested.add(share(Button::labelled("A", 12)));
-				nested.add(share(Button::labelled("B", 12)));
-				nested.add(share(Button::labelled("C", 12)));
+				nested.add(widget_of(Button::labelled("A", 12)));
+				nested.add(widget_of(Button::labelled("B", 12)));
+				nested.add(widget_of(Button::labelled("C", 12)));
 				nested
 			}));
-			container.add(share(Button::labelled("Three", 12)));
+			container.add(widget_of(Button::labelled("Three", 12)));
 			container
 		}));
 	}

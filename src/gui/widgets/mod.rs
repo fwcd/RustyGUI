@@ -11,3 +11,4 @@ pub mod layouted_widget;
 pub mod gui;
 pub mod base;
 pub mod gui_input_responder;
+pub mod widget_utils;
