@@ -1,5 +1,5 @@
 # RustyGUI
-GUI toolkit based upon SDL2.
+A GUI toolkit for Rust based upon SDL2. It combines simplicity with an extensible architecture.
 
 ## System Dependencies
 * Rust and Cargo
