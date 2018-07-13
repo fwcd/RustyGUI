@@ -1,7 +1,5 @@
 # TODO
 
-* General
-    * Add `lib.rs` and move the current `main.rs` to a test
 * Graphics
     * Ovals
     * Images

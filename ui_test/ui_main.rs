@@ -1,21 +1,18 @@
-extern crate sdl2;
+extern crate rustygui;
 #[macro_use]
 extern crate log;
 extern crate simple_logger;
 
-mod gui;
-mod utils;
-
-use gui::themes::theme::Theme;
-use gui::widgets::widget_gui_app::WidgetGUIApp;
-use gui::widgets::layouts::box_layout::BoxLayout;
-use gui::widgets::layouts::border_layout::{BorderLayout, TOP_POS, LEFT_POS, RIGHT_POS, BOTTOM_POS, CENTER_POS};
-use gui::widgets::button::Button;
-use gui::widgets::label::Label;
-use gui::widgets::slider::Slider;
-use gui::widgets::widget_utils::widget_of;
-use gui::widgets::container::Container;
-use gui::sdl2::mainloop::run_gui_app;
+use rustygui::gui::themes::theme::Theme;
+use rustygui::gui::widgets::widget_gui_app::WidgetGUIApp;
+use rustygui::gui::widgets::layouts::box_layout::BoxLayout;
+use rustygui::gui::widgets::layouts::border_layout::{BorderLayout, TOP_POS, LEFT_POS, RIGHT_POS, BOTTOM_POS, CENTER_POS};
+use rustygui::gui::widgets::button::Button;
+use rustygui::gui::widgets::label::Label;
+use rustygui::gui::widgets::slider::Slider;
+use rustygui::gui::widgets::widget_utils::widget_of;
+use rustygui::gui::widgets::container::Container;
+use rustygui::gui::sdl2::mainloop::run_gui_app;
 
 fn main() {
 	simple_logger::init_with_level(log::Level::Trace).expect("Could not initialize logger");

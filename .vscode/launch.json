@@ -7,25 +7,11 @@
 		{
 			"type": "lldb",
 			"request": "launch",
-			"name": "Debug rustygui",
+			"name": "Debug ui_test",
 			"cargo": {
 				"args": [
 					"build",
-					"--bin=rustygui"
-				]
-			},
-			"args": [],
-			"cwd": "${workspaceFolder}"
-		},
-		{
-			"type": "lldb",
-			"request": "launch",
-			"name": "Debug tests in rustygui",
-			"cargo": {
-				"args": [
-					"test",
-					"--no-run",
-					"--bin=rustygui"
+					"--bin=ui_test"
 				]
 			},
 			"args": [],
