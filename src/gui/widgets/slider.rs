@@ -69,6 +69,18 @@ impl Slider {
 		
 		(normalized_x * (max - min)) + min
 	}
+	
+	fn set_value_if_valid(&mut self, value: f32) {
+		let min = *self.range.start();
+		let max = *self.range.end();
+		self.value = if value < min {
+			min
+		} else if value > max {
+			max
+		} else {
+			value
+		}
+	}
 }
 
 impl Widget for Slider {
@@ -102,8 +114,9 @@ impl Widget for Slider {
 	}
 	
 	fn handle_mouse_drag(&mut self, event: MouseDragEvent) -> bool {
+		let value = self.pos_to_value(event.pos);
+		self.set_value_if_valid(value);
 		self.set_needs_relayout(true);
-		self.value = self.pos_to_value(event.pos);
 		true
 	}
 	
