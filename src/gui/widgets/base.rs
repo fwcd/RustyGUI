@@ -18,7 +18,7 @@ impl WidgetBase {
 	}
 	
 	pub fn new(bounds: WidgetBounds) -> Self {
-		WidgetBase {
+		Self {
 			bounds: bounds,
 			padding: Vec2i::of(10, 10),
 			needs_relayout: true,

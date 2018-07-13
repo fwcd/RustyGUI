@@ -33,25 +33,27 @@ pub struct MouseDragEvent {
 }
 
 impl MousePosEvent {
-	pub fn at(pos: Vec2i) -> MousePosEvent {
-		return MousePosEvent { pos: pos };
+	pub fn at(pos: Vec2i) -> Self {
+		Self { pos: pos }
 	}
 }
 
 impl MouseClickEvent {
-	pub fn at(pos: Vec2i, button: MouseButton) -> MouseClickEvent {
-		return MouseClickEvent { pos: pos, button: button };
+	pub fn at(pos: Vec2i, button: MouseButton) -> Self {
+		Self { pos: pos, button: button }
 	}
 }
 
 impl MouseMoveEvent {
-	pub fn between(last_pos: Vec2i, pos: Vec2i) -> MouseMoveEvent {
-		return MouseMoveEvent { last_pos: pos, pos: pos };
+	pub fn between(last_pos: Vec2i, pos: Vec2i) -> Self {
+		Self { last_pos: pos, pos: pos }
 	}
 }
 
 impl MouseDragEvent {
-	pub fn between(last_pos: Vec2i, pos: Vec2i, button: MouseButton) -> MouseDragEvent {
-		return MouseDragEvent { last_pos: pos, pos: pos, button: button };
+	pub fn between(last_pos: Vec2i, pos: Vec2i, button: MouseButton) -> Self {
+		Self { last_pos: pos, pos: pos, button: button }
 	}
+	
+	pub fn delta(&self) -> Vec2i { self.pos - self.last_pos }
 }
