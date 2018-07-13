@@ -11,3 +11,4 @@
     * Sliders
     * Image widgets
     * Macros to create widget hierarchies
+    * Focus mechanism that checks whether a widget accepts keyboard input

@@ -11,6 +11,7 @@ use gui::core::graphics::Graphics;
 use gui::core::draw_params::ShapeDrawParams;
 use gui::themes::theme::Theme;
 use std::ops::RangeInclusive;
+use std::rc::Rc;
 
 pub struct Slider {
 	// view
@@ -83,7 +84,9 @@ impl Widget for Slider {
 	
 	fn base_mut(&mut self) -> &mut WidgetBase { &mut self.base }
 	
-	fn childs(&self) -> Vec<Shared<Widget>> { vec![self.thumb.clone()] }
+	fn for_each_child(&mut self, each: &mut FnMut(&mut Widget)) {
+		each(Rc::get_mut(&mut self.thumb).expect("Could not borrow slider thumb").get_mut());
+	}
 }
 
 struct SliderThumb {

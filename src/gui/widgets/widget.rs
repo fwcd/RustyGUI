@@ -57,13 +57,14 @@ pub trait Widget: GUIInputResponder {
 	}
 	
 	fn or_any_child_needs_relayout(&self) -> bool {
-		for child in self.childs() {
-			if child.borrow().or_any_child_needs_relayout() { return true; }
-		}
+		let needs_relayout = false;
+		self.for_each_child(&mut |it|
+			if it.or_any_child_needs_relayout() { needs_relayout = true; }
+		);
 		self.needs_relayout()
 	}
 	
-	fn childs(&self) -> Vec<Shared<Widget>> { Vec::new() }
+	fn for_each_child(&mut self, each: &mut FnMut(&mut Widget)) {}
 	
 	fn handle_mouse_down(&mut self, event: MouseClickEvent) -> bool { false }
 	
@@ -99,12 +100,13 @@ pub trait Widget: GUIInputResponder {
 
 impl <W> GUIInputResponder for W where W: Widget {
 	fn on_mouse_down(&mut self, gui: &mut WidgetGUI, event: MouseClickEvent) -> bool {
-		for child in self.childs() {
-			let mut borrowed_child = child.borrow_mut();
-			let contains_pos = borrowed_child.bounds().rect().contains(event.pos);
-			if contains_pos && borrowed_child.on_mouse_down(gui, event) { return true; }
-		}
-		let handled = self.handle_mouse_down(event);
+		let mut handled = false;
+		self.for_each_child(&mut |it| {
+			let contains_pos = it.bounds().rect().contains(event.pos);
+			if contains_pos && it.on_mouse_down(gui, event) { handled = true; }
+		});
+		if handled { return true; }
+		handled = self.handle_mouse_down(event);
 		if handled {
 			if let Some(this) = self.this() {
 				gui.set_dragged(this);
@@ -116,43 +118,52 @@ impl <W> GUIInputResponder for W where W: Widget {
 	}
 	
 	fn on_mouse_up(&mut self, gui: &mut WidgetGUI, event: MouseClickEvent) -> bool {
-		for child in self.childs() {
-			let mut borrowed_child = child.borrow_mut();
-			let contains_pos = borrowed_child.bounds().rect().contains(event.pos);
-			if contains_pos && borrowed_child.on_mouse_up(gui, event) { return true; }
-		}
+		let mut handled = false;
+		self.for_each_child(&mut |it| {
+			let contains_pos = it.bounds().rect().contains(event.pos);
+			if contains_pos && it.on_mouse_up(gui, event) { handled = true; }
+		});
+		if handled { return true; }
 		self.handle_mouse_up(event)
 	}
 	
 	fn on_mouse_move(&mut self, gui: &mut WidgetGUI, event: MouseMoveEvent) -> bool {
-		for child in self.childs() {
-			let mut borrowed_child = child.borrow_mut();
-			let contains_pos = borrowed_child.bounds().rect().contains(event.pos);
-			if contains_pos && borrowed_child.on_mouse_move(gui, event) { return true; }
-		}
+		let mut handled = false;
+		self.for_each_child(&mut |it| {
+			let contains_pos = it.bounds().rect().contains(event.pos);
+			if contains_pos && it.on_mouse_move(gui, event) { handled = true; }
+		});
+		if handled { return true; }
 		self.handle_mouse_move(event)
 	}
 	
 	fn on_mouse_drag(&mut self, gui: &mut WidgetGUI, event: MouseDragEvent) -> bool {
-		for child in self.childs() {
-			let mut borrowed_child = child.borrow_mut();
-			let contains_pos = borrowed_child.bounds().rect().contains(event.pos);
-			if contains_pos && borrowed_child.on_mouse_drag(gui, event) { return true; }
-		}
+		let mut handled = false;
+		self.for_each_child(&mut |it| {
+			let contains_pos = it.bounds().rect().contains(event.pos);
+			if contains_pos && it.on_mouse_drag(gui, event) { handled = true; }
+		});
+		if handled { return true; }
 		self.handle_mouse_drag(event)
 	}
 	
+	// TODO: Focus mechanism that checks whether a widget accepts keyboard input
+	
 	fn on_key_down(&mut self, gui: &mut WidgetGUI, event: KeyEvent) -> bool {
-		for child in self.childs() {
-			if child.borrow_mut().on_key_down(gui, event) { return true; }
-		}
+		let mut handled = false;
+		self.for_each_child(&mut |it| {
+			if it.on_key_down(gui, event) { handled = true; }
+		});
+		if handled { return true; }
 		self.handle_key_down(event)
 	}
 	
 	fn on_key_up(&mut self, gui: &mut WidgetGUI, event: KeyEvent) -> bool {
-		for child in self.childs() {
-			if child.borrow_mut().on_key_up(gui, event) { return true; }
-		}
+		let mut handled = false;
+		self.for_each_child(&mut |it| {
+			if it.on_key_up(gui, event) { handled = true; }
+		});
+		if handled { return true; }
 		self.handle_key_up(event)
 	}
 }

@@ -139,8 +139,11 @@ impl Widget for Container {
 		self.base.set_needs_relayout(false);
 	}
 	
-	fn childs(&self) -> Vec<Shared<Widget>> {
-		self.childs.iter().map(|it| it.widget()).collect::<Vec<Shared<Widget>>>()
+	fn for_each_child(&mut self, each: &mut FnMut(&mut Widget)) {
+		for child in &self.childs {
+			let mut child_widget = child.widget();
+			each(child_widget.get_mut());
+		}
 	}
 	
 	fn base(&self) -> &WidgetBase { &self.base }
