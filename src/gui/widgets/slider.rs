@@ -103,6 +103,8 @@ impl Widget for Slider {
 	fn preferred_size(&self, _graphics: &Graphics) -> Size { self.preferred_size }
 	
 	fn handle_mouse_down(&mut self, event: MouseClickEvent) -> bool {
+		let value = self.pos_to_value(event.pos);
+		self.set_value_if_valid(value);
 		self.set_needs_relayout(true);
 		self.is_pressed = true;
 		true
