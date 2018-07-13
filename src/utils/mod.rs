@@ -5,3 +5,4 @@ pub mod size;
 pub mod reduce;
 pub mod shared;
 pub mod math;
+pub mod cast;
