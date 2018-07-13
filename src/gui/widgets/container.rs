@@ -59,7 +59,7 @@ impl Container {
 		}
 		let widget = LayoutedWidget::of(child, layout_hint, id);
 		self.childs.push(widget);
-		self.base_mut().set_needs_relayout(true);
+		self.set_needs_relayout(true);
 	}
 	
 	pub fn remove_with_id(&mut self, id: i32) {
@@ -126,7 +126,7 @@ impl Widget for Container {
 		let top_left = self.top_left();
 		let size = self.preferred_size(graphics);
 		self.set_bounds_deeply(WidgetBounds::from(top_left, size));
-		self.base_mut().set_needs_relayout(false);
+		self.set_needs_relayout(false);
 		
 		let bounds = self.preferred_bounds(graphics);
 		self.layout.arrange(&mut self.childs, &bounds, graphics);

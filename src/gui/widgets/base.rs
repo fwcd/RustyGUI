@@ -39,7 +39,7 @@ impl WidgetBase {
 	
 	pub fn set_padding(&mut self, padding: Vec2i) { self.padding = padding }
 	
-	pub fn set_needs_relayout(&mut self, needs_relayout: bool) { self.needs_relayout = needs_relayout }
+	pub fn set_needs_relayout(&mut self, needs_relayout: bool) { self.needs_relayout = needs_relayout; }
 	
 	pub fn set_gui(&mut self, gui: WeakShared<WidgetGUI>) { self.gui = gui; }
 	

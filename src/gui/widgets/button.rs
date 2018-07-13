@@ -66,7 +66,7 @@ impl Widget for Button {
 	
 	fn handle_mouse_down(&mut self, event: MouseClickEvent) -> bool {
 		self.label.borrow_mut().set_text("Clicked!");
-		self.base.set_needs_relayout(true);
+		self.set_needs_relayout(true);
 		self.active = true;
 		true
 	}

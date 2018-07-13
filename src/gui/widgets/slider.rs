@@ -79,7 +79,7 @@ impl Widget for Slider {
 	fn preferred_size(&self, _graphics: &Graphics) -> Size { self.preferred_size }
 	
 	fn handle_mouse_down(&mut self, event: MouseClickEvent) -> bool {
-		self.base.set_needs_relayout(true);
+		self.set_needs_relayout(true);
 		true
 	}
 	
@@ -135,7 +135,7 @@ impl Widget for SliderThumb {
 	}
 	
 	fn handle_mouse_down(&mut self, event: MouseClickEvent) -> bool {
-		self.base.set_needs_relayout(true);
+		self.set_needs_relayout(true);
 		self.is_pressed = true;
 		true
 	}

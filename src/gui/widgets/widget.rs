@@ -48,17 +48,17 @@ pub trait Widget: GUIInputResponder {
 	}
 	
 	fn update_layout_deeply(&mut self, graphics: &Graphics) {
-		self.update_layout(graphics);
 		self.for_each_child(&mut |mut it|
 			it.update_layout_if_needed(graphics)
 		);
+		self.update_layout(graphics);
 	}
 	
 	fn update_layout(&mut self, graphics: &Graphics) {
 		let top_left = self.top_left();
 		let size = self.preferred_size(graphics);
 		self.set_bounds_deeply(WidgetBounds::from(top_left, size));
-		self.base_mut().set_needs_relayout(false);
+		self.set_needs_relayout(false);
 	}
 	
 	fn update_layout_if_needed(&mut self, graphics: &Graphics) {
@@ -89,11 +89,19 @@ pub trait Widget: GUIInputResponder {
 	
 	fn handle_key_up(&mut self, event: KeyEvent) -> bool { false }
 	
+	fn set_needs_relayout(&mut self, needs_relayout: bool) {
+		if needs_relayout {
+			trace!("{} requests a relayout", self.name());
+		} else {
+			trace!("{} handles a relayout", self.name());
+		}
+		self.base_mut().set_needs_relayout(needs_relayout);
+	}
+	
 	/// This method should ONLY be called inside of
 	/// Layout managers OR when no layout is used at all.
 	/// Otherwise conflicts may occur.
 	fn set_bounds_deeply(&mut self, bounds: WidgetBounds) {
-		trace!("{} sets bounds deeply", self.name());
 		let delta = self.bounds().offset_to(&bounds);
 		self.for_each_child(&mut |mut it|
 			it.move_by(delta)
