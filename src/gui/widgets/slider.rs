@@ -86,9 +86,12 @@ impl Slider {
 impl Widget for Slider {
 	fn render(&mut self, graphics: &mut Graphics, theme: &Theme) {
 		let bounds = self.bounds().rect();
+		let tl = bounds.top_left();
 		
-		// Draw background
-		graphics.draw_rect(bounds, ShapeDrawParams::fill(theme.bg().translucent()));
+		// Draw track
+		let track_height = bounds.height() / 8;
+		let track = Rectangle::new(tl.x, bounds.center().y - (track_height / 2) as i32, bounds.width(), track_height);
+		graphics.draw_rect(track, ShapeDrawParams::fill(theme.bg().translucent()));
 		
 		if self.old_value != self.value || self.base.has_changed_bounds() {
 			// Thumb needs an update
