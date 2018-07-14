@@ -90,10 +90,11 @@ impl Widget for Slider {
 		// Draw background
 		graphics.draw_rect(bounds, ShapeDrawParams::fill(theme.bg().translucent()));
 		
-		if self.old_value != self.value {
+		if self.old_value != self.value || self.base.has_changed_bounds() {
 			// Thumb needs an update
 			self.thumb_center = self.value_to_pos(self.value);
 			self.old_value = self.value;
+			self.base.reset_has_changed_bounds()
 		}
 		
 		// Draw thumb

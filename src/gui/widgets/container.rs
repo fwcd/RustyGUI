@@ -9,7 +9,7 @@ use gui::core::draw_params::ShapeDrawParams;
 use gui::themes::theme::Theme;
 use utils::reduce::Reduce;
 use utils::size::Size;
-use utils::shared::Shared;
+use utils::shared::{Shared, share};
 use utils::vec2i::Vec2i;
 use std::rc::Rc;
 use std::cell::RefMut;
@@ -24,28 +24,36 @@ pub struct Container {
 }
 
 impl Container {
-	pub fn new(layout: Box<Layout>) -> Self {
+	pub fn new<L>(layout: L) -> Self where L: 'static + Layout {
 		Container {
 			base: WidgetBase::empty(),
 			childs: Vec::new(),
-			layout: layout,
+			layout: Box::new(layout),
 			current_id: 0,
 			has_background: true,
 			preferred_size_override: None
 		}
 	}
 	
-	pub fn hbox() -> Self { Self::new(Box::new(BoxLayout::horizontal())) }
+	pub fn hbox() -> Self { Self::new(BoxLayout::horizontal()) }
 	
-	pub fn vbox() -> Self { Self::new(Box::new(BoxLayout::vertical())) }
+	pub fn vbox() -> Self { Self::new(BoxLayout::vertical()) }
 	
 	pub fn set_layout(&mut self, layout: Box<Layout>) { self.layout = layout }
 	
-	pub fn add(&mut self, child: Shared<Widget>) {
-		self.insert(child, "");
+	pub fn add<W>(&mut self, child: W) where W: 'static + Widget {
+		self.add_shared(share(child));
 	}
 	
-	pub fn insert(&mut self, child: Shared<Widget>, layout_hint: &str) {
+	pub fn insert<W>(&mut self, child: W, layout_hint: &str) where W: 'static + Widget {
+		self.insert_shared(share(child), layout_hint);
+	}
+	
+	pub fn add_shared(&mut self, child: Shared<Widget>) {
+		self.insert_shared(child, "");
+	}
+	
+	pub fn insert_shared(&mut self, child: Shared<Widget>, layout_hint: &str) {
 		let current_id = self.current_id;
 		self.insert_with_id(child, layout_hint, current_id);
 		self.current_id += 1;
@@ -122,12 +130,7 @@ impl Widget for Container {
 	
 	fn bounds(&self) -> &WidgetBounds { &self.base.bounds() }
 	
-	fn update_layout(&mut self, graphics: &Graphics) {
-		let top_left = self.top_left();
-		let size = self.preferred_size(graphics);
-		self.set_bounds_deeply(WidgetBounds::from(top_left, size));
-		self.set_needs_relayout(false);
-		
+	fn internal_on_update_layout(&mut self, graphics: &Graphics) {
 		let bounds = self.preferred_bounds(graphics);
 		self.layout.arrange(&mut self.childs, &bounds, graphics);
 	}

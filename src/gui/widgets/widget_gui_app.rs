@@ -16,7 +16,7 @@ pub struct WidgetGUIApp {
 }
 
 impl WidgetGUIApp {
-	pub fn new(title: &str, width: u32, height: u32, base_layout: Box<Layout>) -> Self {
+	pub fn new<L>(title: &str, width: u32, height: u32, base_layout: L) -> Self where L: Layout + 'static {
 		WidgetGUIApp {
 			title: title.to_string(),
 			width: width,

@@ -23,7 +23,7 @@ pub struct WidgetGUI {
 }
 
 impl WidgetGUI {
-	pub fn new(width: u32, height: u32, base_layout: Box<Layout>) -> Shared<Self> {
+	pub fn new<L>(width: u32, height: u32, base_layout: L) -> Shared<Self> where L: 'static + Layout {
 		let root = share(Container::new(base_layout));
 		{
 			let mut root_ref = root.borrow_mut();

@@ -59,7 +59,12 @@ pub trait Widget: GUIInputResponder {
 		let size = self.preferred_size(graphics);
 		self.set_bounds_deeply(WidgetBounds::from(top_left, size));
 		self.set_needs_relayout(false);
+		self.internal_on_update_layout(graphics);
 	}
+	
+	/// This is NOT an API method and should only be
+	/// implemented, not called from outside of this trait.
+	fn internal_on_update_layout(&mut self, graphics: &Graphics) {}
 	
 	fn update_layout_if_needed(&mut self, graphics: &Graphics) {
 		if self.or_any_child_needs_relayout() {

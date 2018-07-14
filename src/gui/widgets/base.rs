@@ -8,6 +8,7 @@ pub struct WidgetBase {
 	bounds: WidgetBounds,
 	padding: Vec2i,
 	needs_relayout: bool,
+	has_changed_bounds: bool,
 	gui: WeakShared<WidgetGUI>,
 	this: Option<WeakShared<Widget>>
 }
@@ -23,6 +24,7 @@ impl WidgetBase {
 			padding: Vec2i::of(10, 10),
 			needs_relayout: true,
 			gui: WeakShared::new(),
+			has_changed_bounds: true,
 			this: None
 		}
 	}
@@ -35,7 +37,14 @@ impl WidgetBase {
 	
 	pub fn gui(&self) -> WeakShared<WidgetGUI> { self.gui.clone() }
 	
-	pub fn set_bounds(&mut self, bounds: WidgetBounds) { self.bounds = bounds }
+	pub fn set_bounds(&mut self, bounds: WidgetBounds) {
+		self.has_changed_bounds = true;
+		self.bounds = bounds;
+	}
+	
+	pub fn has_changed_bounds(&self) -> bool { self.has_changed_bounds }
+	
+	pub fn reset_has_changed_bounds(&mut self) { self.has_changed_bounds = false }
 	
 	pub fn set_padding(&mut self, padding: Vec2i) { self.padding = padding }
 	
