@@ -10,5 +10,5 @@ pub trait GUIApplication: InputResponder {
 	
 	fn height(&self) -> u32;
 	
-	fn render(&mut self, graphics: &mut Graphics) {}
+	fn render(&mut self, _graphics: &mut Graphics) {}
 }

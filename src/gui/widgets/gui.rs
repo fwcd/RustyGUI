@@ -4,7 +4,6 @@ use super::layouts::layout::Layout;
 use super::container::Container;
 use super::gui_input_responder::GUIInputResponder;
 use gui::core::graphics::Graphics;
-use gui::core::gui_application::GUIApplication;
 use gui::core::mouse::{MouseClickEvent, MouseDragEvent, MouseMoveEvent};
 use gui::core::keyboard::KeyEvent;
 use gui::core::input_responder::InputResponder;

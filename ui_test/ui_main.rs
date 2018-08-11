@@ -6,7 +6,7 @@ extern crate simple_logger;
 use rustygui::gui::themes::theme::Theme;
 use rustygui::gui::widgets::widget_gui_app::WidgetGUIApp;
 use rustygui::gui::widgets::layouts::box_layout::BoxLayout;
-use rustygui::gui::widgets::layouts::border_layout::{BorderLayout, TOP_POS, LEFT_POS, RIGHT_POS, BOTTOM_POS, CENTER_POS};
+use rustygui::gui::widgets::layouts::border_layout::{BorderLayout, TOP_POS, LEFT_POS, RIGHT_POS};
 use rustygui::gui::widgets::button::Button;
 use rustygui::gui::widgets::label::Label;
 use rustygui::gui::widgets::slider::Slider;
@@ -30,9 +30,9 @@ fn main() {
 		gui.set_theme(Theme::dark());
 		
 		let mut root = gui.borrow_root_mut();
-		let mut test_button = Button::labelled("Test", 32);
-		test_button.set_action(|b| b.set_text("Clicked"));
-		root.add(test_button);
+		let test_button = widget_of(Button::labelled("Click me!", 14));
+		test_button.borrow_mut().set_action(|b| b.set_text("Clicked itself"));
+		root.add_shared(test_button.clone());
 		root.add(Label::of("Demo", 15));
 		root.add(Slider::new(0.0..=10.0));
 		root.add({
@@ -41,7 +41,9 @@ fn main() {
 			container.add(Button::labelled("Two", 12));
 			container.add({
 				let mut nested = Container::new(BorderLayout::new());
-				nested.insert(Button::labelled("Nested button", 12), TOP_POS);
+				let mut nested_button = Button::labelled("Nested button", 12);
+				nested_button.set_action(move |_| test_button.borrow_mut().set_text("Clicked Nested"));
+				nested.insert(nested_button, TOP_POS);
 				nested.insert(Button::labelled("Just a large button", 12), LEFT_POS);
 				nested.insert(Label::of("Label", 12), RIGHT_POS);
 				nested

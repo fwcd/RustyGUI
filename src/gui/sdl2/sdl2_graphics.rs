@@ -13,7 +13,7 @@ use gui::core::draw_params::ShapeDrawParams;
 use gui::core::font_params::FontParams;
 use gui::core::graphics::Graphics;
 use std::path::Path;
-use super::api_bridge::{sdl2_color_of, sdl2_rect_of};
+use super::api_bridge::sdl2_color_of;
 
 /// A class wrapping the SDL2 graphics context to decouple
 /// the application from the API.

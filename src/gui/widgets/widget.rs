@@ -4,7 +4,7 @@ use super::base::WidgetBase;
 use super::gui_input_responder::GUIInputResponder;
 use utils::size::Size;
 use utils::vec2i::Vec2i;
-use utils::shared::{Shared, WeakShared};
+use utils::shared::WeakShared;
 use gui::core::graphics::Graphics;
 use gui::core::mouse::{MouseClickEvent, MouseDragEvent, MouseMoveEvent};
 use gui::core::keyboard::KeyEvent;
@@ -64,7 +64,7 @@ pub trait Widget: GUIInputResponder {
 	
 	/// This is NOT an API method and should only be
 	/// implemented, not called from outside of this trait.
-	fn internal_on_update_layout(&mut self, graphics: &Graphics) {}
+	fn internal_on_update_layout(&mut self, _graphics: &Graphics) {}
 	
 	fn update_layout_if_needed(&mut self, graphics: &Graphics) {
 		if self.or_any_child_needs_relayout() {
@@ -80,19 +80,19 @@ pub trait Widget: GUIInputResponder {
 		child_needs_relayout || self.needs_relayout()
 	}
 	
-	fn for_each_child(&mut self, each: &mut FnMut(RefMut<Widget>)) {}
+	fn for_each_child(&mut self, _each: &mut FnMut(RefMut<Widget>)) {}
 	
-	fn handle_mouse_down(&mut self, event: MouseClickEvent) -> bool { false }
+	fn handle_mouse_down(&mut self, _event: MouseClickEvent) -> bool { false }
 	
-	fn handle_mouse_up(&mut self, event: MouseClickEvent) -> bool { false }
+	fn handle_mouse_up(&mut self, _event: MouseClickEvent) -> bool { false }
 	
-	fn handle_mouse_move(&mut self, event: MouseMoveEvent) -> bool { false }
+	fn handle_mouse_move(&mut self, _event: MouseMoveEvent) -> bool { false }
 	
-	fn handle_mouse_drag(&mut self, event: MouseDragEvent) -> bool { false }
+	fn handle_mouse_drag(&mut self, _event: MouseDragEvent) -> bool { false }
 	
-	fn handle_key_down(&mut self, event: KeyEvent) -> bool { false }
+	fn handle_key_down(&mut self, _event: KeyEvent) -> bool { false }
 	
-	fn handle_key_up(&mut self, event: KeyEvent) -> bool { false }
+	fn handle_key_up(&mut self, _event: KeyEvent) -> bool { false }
 	
 	fn set_needs_relayout(&mut self, needs_relayout: bool) {
 		if needs_relayout {

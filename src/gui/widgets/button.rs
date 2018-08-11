@@ -20,7 +20,7 @@ pub struct Button<'a> {
 
 impl <'a> Button<'a> {
 	pub fn new(label: Label) -> Self {
-		let mut instance = Self {
+		let instance = Self {
 			base: WidgetBase::empty(),
 			label: widget_of(label),
 			action: None,
@@ -42,6 +42,11 @@ impl <'a> Button<'a> {
 	pub fn remove_action(&mut self) { self.action = None; }
 	
 	pub fn set_action<F>(&mut self, action: F) where F: 'a + Fn(&mut Self) { self.action = Some(share(action)) }
+	
+	pub fn with_action<F>(mut self, action: F) -> Self where F: 'a + Fn(&mut Self) {
+		self.set_action(action);
+		self
+	}
 	
 	pub fn text(&self) -> String { self.label.borrow().text().to_owned() }
 	
@@ -80,7 +85,7 @@ impl <'a> Widget for Button<'a> {
 	
 	fn name(&self) -> &str { "Button" }
 	
-	fn handle_mouse_down(&mut self, event: MouseClickEvent) -> bool {
+	fn handle_mouse_down(&mut self, _event: MouseClickEvent) -> bool {
 		if let Some(action) = &self.cloned_action() {
 			action.borrow()(self);
 		}
@@ -89,7 +94,7 @@ impl <'a> Widget for Button<'a> {
 		true
 	}
 	
-	fn handle_mouse_up(&mut self, event: MouseClickEvent) -> bool {
+	fn handle_mouse_up(&mut self, _event: MouseClickEvent) -> bool {
 		self.active = false;
 		true
 	}

@@ -46,13 +46,13 @@ impl MouseClickEvent {
 
 impl MouseMoveEvent {
 	pub fn between(last_pos: Vec2i, pos: Vec2i) -> Self {
-		Self { last_pos: pos, pos: pos }
+		Self { last_pos: last_pos, pos: pos }
 	}
 }
 
 impl MouseDragEvent {
 	pub fn between(last_pos: Vec2i, pos: Vec2i, button: MouseButton) -> Self {
-		Self { last_pos: pos, pos: pos, button: button }
+		Self { last_pos: last_pos, pos: pos, button: button }
 	}
 	
 	pub fn delta(&self) -> Vec2i { self.pos - self.last_pos }

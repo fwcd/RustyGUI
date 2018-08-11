@@ -1,4 +1,5 @@
 use super::widget::Widget;
+use super::widget_utils::widget_of;
 use super::bounds::WidgetBounds;
 use super::base::WidgetBase;
 use super::layouts::layout::Layout;
@@ -9,7 +10,7 @@ use gui::core::draw_params::ShapeDrawParams;
 use gui::themes::theme::Theme;
 use utils::reduce::Reduce;
 use utils::size::Size;
-use utils::shared::{Shared, share};
+use utils::shared::Shared;
 use utils::vec2i::Vec2i;
 use std::rc::Rc;
 use std::cell::RefMut;
@@ -42,11 +43,23 @@ impl Container {
 	pub fn set_layout(&mut self, layout: Box<Layout>) { self.layout = layout }
 	
 	pub fn add<W>(&mut self, child: W) where W: 'static + Widget {
-		self.add_shared(share(child));
+		self.add_shared(widget_of(child));
 	}
 	
 	pub fn insert<W>(&mut self, child: W, layout_hint: &str) where W: 'static + Widget {
-		self.insert_shared(share(child), layout_hint);
+		self.insert_shared(widget_of(child), layout_hint);
+	}
+	
+	pub fn add_get<W>(&mut self, child: W) -> Shared<W> where W: 'static + Widget {
+		let widget_ref = widget_of(child);
+		self.add_shared(widget_ref.clone());
+		return widget_ref;
+	}
+	
+	pub fn insert_get<W>(&mut self, child: W, layout_hint: &str) -> Shared<W> where W: 'static + Widget {
+		let widget_ref = widget_of(child);
+		self.insert_shared(widget_ref.clone(), layout_hint);
+		return widget_ref;
 	}
 	
 	pub fn add_shared(&mut self, child: Shared<Widget>) {
@@ -72,7 +85,7 @@ impl Container {
 	
 	pub fn remove_with_id(&mut self, id: i32) {
 		let index = self.index_of_id(id).expect("Could not find index of the child widget");
-		let removed = self.childs.remove(index);
+		let _removed = self.childs.remove(index);
 	}
 	
 	fn index_of_id(&self, id: i32) -> Option<usize> {

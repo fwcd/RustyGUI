@@ -13,9 +13,9 @@ impl EmptyWidget {
 }
 
 impl Widget for EmptyWidget {
-	fn render(&mut self, graphics: &mut Graphics, theme: &Theme) {}
+	fn render(&mut self, _graphics: &mut Graphics, _theme: &Theme) {}
 	
-	fn preferred_size(&self, graphics: &Graphics) -> Size { Size::of(0, 0) }
+	fn preferred_size(&self, _graphics: &Graphics) -> Size { Size::of(0, 0) }
 	
 	fn name(&self) -> &str { "Empty" }
 	

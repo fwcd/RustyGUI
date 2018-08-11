@@ -1,17 +1,13 @@
 use super::widget::Widget;
 use super::base::WidgetBase;
-use super::bounds::WidgetBounds;
-use super::widget_utils::widget_of;
 use utils::size::Size;
 use utils::vec2i::Vec2i;
 use utils::rect::Rectangle;
-use utils::shared::{Shared, WeakShared};
 use gui::core::mouse::{MouseClickEvent, MouseDragEvent};
 use gui::core::graphics::Graphics;
 use gui::core::draw_params::ShapeDrawParams;
 use gui::themes::theme::Theme;
 use std::ops::RangeInclusive;
-use std::cell::RefMut;
 use std::f32;
 
 pub struct Slider {
@@ -114,7 +110,7 @@ impl Widget for Slider {
 		true
 	}
 	
-	fn handle_mouse_up(&mut self, event: MouseClickEvent) -> bool {
+	fn handle_mouse_up(&mut self, _event: MouseClickEvent) -> bool {
 		self.is_pressed = false;
 		true
 	}
