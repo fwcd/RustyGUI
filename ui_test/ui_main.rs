@@ -1,3 +1,4 @@
+#[macro_use]
 extern crate rustygui;
 #[macro_use]
 extern crate log;
@@ -42,9 +43,15 @@ fn main() {
 			container.add({
 				let mut nested = Container::new(BorderLayout::new());
 				let mut nested_button = Button::labelled("Nested button", 12);
-				nested_button.set_action(move |_| test_button.borrow_mut().set_text("Clicked Nested"));
+				nested_button.set_action(enclose! { (test_button) move |_| {
+					test_button.borrow_mut().set_text("Clicked Nested");
+				}});
 				nested.insert(nested_button, TOP_POS);
-				nested.insert(Button::labelled("Just a large button", 12), LEFT_POS);
+				let mut large_button = Button::labelled("Just a large button", 12);
+				large_button.set_action(enclose! { (test_button) move |_| {
+					test_button.borrow_mut().set_text("Clicked Large button");
+				}});
+				nested.insert(large_button, LEFT_POS);
 				nested.insert(Label::of("Label", 12), RIGHT_POS);
 				nested
 			});
